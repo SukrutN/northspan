@@ -1,0 +1,54 @@
+# One repo, one workflow: the planner's tests, then the site's figure locks,
+# lint, and the production build.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: engine + site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install (locked)
+        run: npm ci
+
+      - name: Engine (tests)
+        working-directory: engine
+        run: dotnet test --configuration Release
+
+      - name: Fixture provenance (sha256)
+        working-directory: engine/fixtures
+        run: sha256sum -c MANIFEST
+
+      - name: Figure locks (the site's half of the contract)
+        run: npm test
+
+      - name: Lint (zero errors)
+        run: npm run lint
+
+      - name: Build (production, TypeScript included, one retry on the known font-download flake)
+        run: npm run build || npm run build
+
+  docker:
+    name: image build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the planner image
+        run: docker build -t northspan-api .

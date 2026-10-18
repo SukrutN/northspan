@@ -1,0 +1,14 @@
+# The northspan planner as one service: build the image, run the API, and
+# keep the operational knobs in one place. The token is optional; when it is
+# set the workbench asks for it on the first refusal.
+services:
+  northspan:
+    build: .
+    image: northspan-api
+    ports:
+      - "47231:47231"
+    environment:
+      NORTHSPAN_TOKEN: ${NORTHSPAN_TOKEN:-}
+      NORTHSPAN_RATE_LIMIT: ${NORTHSPAN_RATE_LIMIT:-600}
+      NORTHSPAN_MAX_BODY: ${NORTHSPAN_MAX_BODY:-1048576}
+    restart: unless-stopped
