@@ -1,0 +1,12 @@
+{
+  "id": "SH-118",
+  "house": "Salt House Hotel",
+  "note": "Lamp stores for the east rooms",
+  "locations": [
+    "FLI-01-W",
+    "REE-02-E",
+    "REE-04-W",
+    "COB-05-E",
+    "CIN-02-E"
+  ]
+}

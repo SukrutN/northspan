@@ -1,0 +1,10 @@
+{
+  "id": "DS-014",
+  "house": "Dry Store sample",
+  "note": "Three bins. The middle leg is shorter on the rear aisle.",
+  "locations": [
+    "ASH-B",
+    "BIR-A",
+    "BIR-B"
+  ]
+}

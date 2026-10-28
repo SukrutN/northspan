@@ -1,0 +1,461 @@
+{
+  "id": "kiln-annex",
+  "name": "Kiln Annex",
+  "widthM": 38,
+  "heightM": 26,
+  "crossAisles": [
+    {
+      "id": "apron",
+      "name": "Apron aisle",
+      "y": 3.8
+    },
+    {
+      "id": "rear",
+      "name": "Rear aisle",
+      "y": 22.8
+    }
+  ],
+  "gate": {
+    "id": "APRON",
+    "name": "Apron gate",
+    "x": 1.5,
+    "y": 3.8
+  },
+  "runs": [
+    {
+      "code": "CIN",
+      "name": "Cinder",
+      "x": 5.6
+    },
+    {
+      "code": "LOA",
+      "name": "Loam",
+      "x": 11.3
+    },
+    {
+      "code": "FLI",
+      "name": "Flint",
+      "x": 17.0
+    },
+    {
+      "code": "REE",
+      "name": "Reed",
+      "x": 22.700000000000003
+    },
+    {
+      "code": "COB",
+      "name": "Cobalt",
+      "x": 28.4
+    }
+  ],
+  "slots": [
+    {
+      "code": "CIN-01-W",
+      "run": "CIN",
+      "stand": "CIN-01",
+      "alongM": 6.15,
+      "sku": "KW-08",
+      "item": "Cotton wick, 8 mm"
+    },
+    {
+      "code": "CIN-01-E",
+      "run": "CIN",
+      "stand": "CIN-01",
+      "alongM": 6.15
+    },
+    {
+      "code": "CIN-02-W",
+      "run": "CIN",
+      "stand": "CIN-02",
+      "alongM": 8.600000000000001
+    },
+    {
+      "code": "CIN-02-E",
+      "run": "CIN",
+      "stand": "CIN-02",
+      "alongM": 8.600000000000001,
+      "sku": "CD-SH",
+      "item": "Cedar shavings"
+    },
+    {
+      "code": "CIN-03-W",
+      "run": "CIN",
+      "stand": "CIN-03",
+      "alongM": 11.05
+    },
+    {
+      "code": "CIN-03-E",
+      "run": "CIN",
+      "stand": "CIN-03",
+      "alongM": 11.05
+    },
+    {
+      "code": "CIN-04-W",
+      "run": "CIN",
+      "stand": "CIN-04",
+      "alongM": 13.5,
+      "sku": "JT-CD",
+      "item": "Jute cord"
+    },
+    {
+      "code": "CIN-04-E",
+      "run": "CIN",
+      "stand": "CIN-04",
+      "alongM": 13.5
+    },
+    {
+      "code": "CIN-05-W",
+      "run": "CIN",
+      "stand": "CIN-05",
+      "alongM": 15.950000000000001
+    },
+    {
+      "code": "CIN-05-E",
+      "run": "CIN",
+      "stand": "CIN-05",
+      "alongM": 15.950000000000001
+    },
+    {
+      "code": "CIN-06-W",
+      "run": "CIN",
+      "stand": "CIN-06",
+      "alongM": 18.4,
+      "sku": "BW-SH",
+      "item": "Beeswax sheet"
+    },
+    {
+      "code": "CIN-06-E",
+      "run": "CIN",
+      "stand": "CIN-06",
+      "alongM": 18.4
+    },
+    {
+      "code": "LOA-01-W",
+      "run": "LOA",
+      "stand": "LOA-01",
+      "alongM": 6.15
+    },
+    {
+      "code": "LOA-01-E",
+      "run": "LOA",
+      "stand": "LOA-01",
+      "alongM": 6.15,
+      "sku": "WL-DS",
+      "item": "Wool duster"
+    },
+    {
+      "code": "LOA-02-W",
+      "run": "LOA",
+      "stand": "LOA-02",
+      "alongM": 8.600000000000001
+    },
+    {
+      "code": "LOA-02-E",
+      "run": "LOA",
+      "stand": "LOA-02",
+      "alongM": 8.600000000000001
+    },
+    {
+      "code": "LOA-03-W",
+      "run": "LOA",
+      "stand": "LOA-03",
+      "alongM": 11.05,
+      "sku": "BR-SN",
+      "item": "Brass snuffer"
+    },
+    {
+      "code": "LOA-03-E",
+      "run": "LOA",
+      "stand": "LOA-03",
+      "alongM": 11.05
+    },
+    {
+      "code": "LOA-04-W",
+      "run": "LOA",
+      "stand": "LOA-04",
+      "alongM": 13.5
+    },
+    {
+      "code": "LOA-04-E",
+      "run": "LOA",
+      "stand": "LOA-04",
+      "alongM": 13.5
+    },
+    {
+      "code": "LOA-05-W",
+      "run": "LOA",
+      "stand": "LOA-05",
+      "alongM": 15.950000000000001
+    },
+    {
+      "code": "LOA-05-E",
+      "run": "LOA",
+      "stand": "LOA-05",
+      "alongM": 15.950000000000001,
+      "sku": "LN-TP",
+      "item": "Linen tape"
+    },
+    {
+      "code": "LOA-06-W",
+      "run": "LOA",
+      "stand": "LOA-06",
+      "alongM": 18.4,
+      "sku": "OK-40",
+      "item": "Oak peg, 40 mm"
+    },
+    {
+      "code": "LOA-06-E",
+      "run": "LOA",
+      "stand": "LOA-06",
+      "alongM": 18.4
+    },
+    {
+      "code": "FLI-01-W",
+      "run": "FLI",
+      "stand": "FLI-01",
+      "alongM": 6.15,
+      "sku": "ST-CK",
+      "item": "Stoneware crock"
+    },
+    {
+      "code": "FLI-01-E",
+      "run": "FLI",
+      "stand": "FLI-01",
+      "alongM": 6.15
+    },
+    {
+      "code": "FLI-02-W",
+      "run": "FLI",
+      "stand": "FLI-02",
+      "alongM": 8.600000000000001
+    },
+    {
+      "code": "FLI-02-E",
+      "run": "FLI",
+      "stand": "FLI-02",
+      "alongM": 8.600000000000001
+    },
+    {
+      "code": "FLI-03-W",
+      "run": "FLI",
+      "stand": "FLI-03",
+      "alongM": 11.05
+    },
+    {
+      "code": "FLI-03-E",
+      "run": "FLI",
+      "stand": "FLI-03",
+      "alongM": 11.05,
+      "sku": "CL-TP",
+      "item": "Clay taper"
+    },
+    {
+      "code": "FLI-04-W",
+      "run": "FLI",
+      "stand": "FLI-04",
+      "alongM": 13.5,
+      "sku": "IR-HK",
+      "item": "Iron hook"
+    },
+    {
+      "code": "FLI-04-E",
+      "run": "FLI",
+      "stand": "FLI-04",
+      "alongM": 13.5
+    },
+    {
+      "code": "FLI-05-W",
+      "run": "FLI",
+      "stand": "FLI-05",
+      "alongM": 15.950000000000001
+    },
+    {
+      "code": "FLI-05-E",
+      "run": "FLI",
+      "stand": "FLI-05",
+      "alongM": 15.950000000000001
+    },
+    {
+      "code": "FLI-06-W",
+      "run": "FLI",
+      "stand": "FLI-06",
+      "alongM": 18.4
+    },
+    {
+      "code": "FLI-06-E",
+      "run": "FLI",
+      "stand": "FLI-06",
+      "alongM": 18.4,
+      "sku": "LP-CH",
+      "item": "Lamp chimney"
+    },
+    {
+      "code": "REE-01-W",
+      "run": "REE",
+      "stand": "REE-01",
+      "alongM": 6.15,
+      "sku": "LP-OL",
+      "item": "Lamp oil tin"
+    },
+    {
+      "code": "REE-01-E",
+      "run": "REE",
+      "stand": "REE-01",
+      "alongM": 6.15
+    },
+    {
+      "code": "REE-02-W",
+      "run": "REE",
+      "stand": "REE-02",
+      "alongM": 8.600000000000001
+    },
+    {
+      "code": "REE-02-E",
+      "run": "REE",
+      "stand": "REE-02",
+      "alongM": 8.600000000000001,
+      "sku": "FX-TW",
+      "item": "Flax twine"
+    },
+    {
+      "code": "REE-03-W",
+      "run": "REE",
+      "stand": "REE-03",
+      "alongM": 11.05
+    },
+    {
+      "code": "REE-03-E",
+      "run": "REE",
+      "stand": "REE-03",
+      "alongM": 11.05
+    },
+    {
+      "code": "REE-04-W",
+      "run": "REE",
+      "stand": "REE-04",
+      "alongM": 13.5,
+      "sku": "SL-BR",
+      "item": "Salt brick"
+    },
+    {
+      "code": "REE-04-E",
+      "run": "REE",
+      "stand": "REE-04",
+      "alongM": 13.5
+    },
+    {
+      "code": "REE-05-W",
+      "run": "REE",
+      "stand": "REE-05",
+      "alongM": 15.950000000000001
+    },
+    {
+      "code": "REE-05-E",
+      "run": "REE",
+      "stand": "REE-05",
+      "alongM": 15.950000000000001
+    },
+    {
+      "code": "REE-06-W",
+      "run": "REE",
+      "stand": "REE-06",
+      "alongM": 18.4
+    },
+    {
+      "code": "REE-06-E",
+      "run": "REE",
+      "stand": "REE-06",
+      "alongM": 18.4,
+      "sku": "CK-DK",
+      "item": "Cork disk"
+    },
+    {
+      "code": "COB-01-W",
+      "run": "COB",
+      "stand": "COB-01",
+      "alongM": 6.15
+    },
+    {
+      "code": "COB-01-E",
+      "run": "COB",
+      "stand": "COB-01",
+      "alongM": 6.15,
+      "sku": "NT-BL",
+      "item": "Night bell"
+    },
+    {
+      "code": "COB-02-W",
+      "run": "COB",
+      "stand": "COB-02",
+      "alongM": 8.600000000000001
+    },
+    {
+      "code": "COB-02-E",
+      "run": "COB",
+      "stand": "COB-02",
+      "alongM": 8.600000000000001
+    },
+    {
+      "code": "COB-03-W",
+      "run": "COB",
+      "stand": "COB-03",
+      "alongM": 11.05,
+      "sku": "CU-RV",
+      "item": "Copper rivet"
+    },
+    {
+      "code": "COB-03-E",
+      "run": "COB",
+      "stand": "COB-03",
+      "alongM": 11.05
+    },
+    {
+      "code": "COB-04-W",
+      "run": "COB",
+      "stand": "COB-04",
+      "alongM": 13.5
+    },
+    {
+      "code": "COB-04-E",
+      "run": "COB",
+      "stand": "COB-04",
+      "alongM": 13.5
+    },
+    {
+      "code": "COB-05-W",
+      "run": "COB",
+      "stand": "COB-05",
+      "alongM": 15.950000000000001
+    },
+    {
+      "code": "COB-05-E",
+      "run": "COB",
+      "stand": "COB-05",
+      "alongM": 15.950000000000001,
+      "sku": "SL-ND",
+      "item": "Sail needle"
+    },
+    {
+      "code": "COB-06-W",
+      "run": "COB",
+      "stand": "COB-06",
+      "alongM": 18.4,
+      "sku": "GR-ST",
+      "item": "Graphite stick"
+    },
+    {
+      "code": "COB-06-E",
+      "run": "COB",
+      "stand": "COB-06",
+      "alongM": 18.4
+    }
+  ],
+  "landmarks": [
+    {
+      "id": "pack",
+      "name": "Pack",
+      "x": 35.3,
+      "y": 3.4
+    }
+  ]
+}
