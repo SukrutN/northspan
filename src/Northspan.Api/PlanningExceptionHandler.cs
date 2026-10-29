@@ -59,6 +59,11 @@ internal sealed class PlanningExceptionHandler : IExceptionHandler
             "Walking rules are not usable",
             rules.Message,
             "/problems/invalid-rules"),
+        InvalidStandardsException standards => Problem(
+            StatusCodes.Status400BadRequest,
+            "Standards cannot be built",
+            standards.Message,
+            "/problems/invalid-standards"),
         FixtureNotFoundException missing => Problem(
             StatusCodes.Status404NotFound,
             "Fixture not found",

@@ -30,6 +30,7 @@ app.MapGet("/health", () => Results.Ok(new { status = "healthy" }))
     .WithTags("Health");
 app.MapFloors();
 app.MapWalks();
+app.MapStandards();
 
 app.Run();
 
