@@ -58,6 +58,19 @@ public sealed class FixtureLibrary
             .ToArray();
     }
 
+    public Operation LoadOperation(string floorId)
+    {
+        var floor = LoadFloor(floorId);
+        var dir = FloorDirectory(floorId);
+        var path = Path.Combine(dir, "operation.json");
+        if (!File.Exists(path))
+        {
+            throw new FixtureNotFoundException($"Floor '{floorId}' declares no operation, so it has no standard.");
+        }
+
+        return OperationFile.Read(path, floor);
+    }
+
     public Floor LoadFloor(string id)
     {
         var dir = FloorDirectory(id);

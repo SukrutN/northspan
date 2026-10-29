@@ -1,3 +1,5 @@
+using Northspan.Domain;
+
 namespace Northspan.Application;
 
 public sealed class FloorDocument

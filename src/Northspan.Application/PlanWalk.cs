@@ -34,7 +34,7 @@ public sealed class PlanWalk
         rules.Check();
 
         var walk = WalkPlanner.Plan(floor, ticket.Locations, rules.MustReturn);
-        var seconds = walk.DistanceM / rules.SpeedMps + walk.Stops.Count * rules.DwellSecondsPerStop;
+        var seconds = WalkSeconds.Of(walk, rules);
         return new PlannedWalk(floor, ticket.Id, ticket.House, ticket.Note, walk, rules, seconds);
     }
 }

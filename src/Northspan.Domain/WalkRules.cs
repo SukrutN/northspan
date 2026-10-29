@@ -1,6 +1,4 @@
-using Northspan.Domain;
-
-namespace Northspan.Application;
+namespace Northspan.Domain;
 
 /// <summary>
 /// How this cart walks. Speed and dwell are not part of the floor.

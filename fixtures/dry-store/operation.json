@@ -1,0 +1,34 @@
+{
+  "id": "case-pull",
+  "name": "Case pull",
+  "note": "A different operation on the second floor: full cases off the bins, heavier grabs, a shorter cart.",
+  "walk": {
+    "speedMps": 1.15,
+    "mustReturn": true,
+    "dwellSecondsPerStop": 0
+  },
+  "shiftSeconds": 28800,
+  "cartStops": 8,
+  "unitsPerLine": 6,
+  "tasks": {
+    "grabPerLineSeconds": 4.0,
+    "grabPerUnitSeconds": 4.0,
+    "countAndGiveSeconds": 1.0,
+    "cartManeuverSeconds": 5.0,
+    "putAndVerifySeconds": 2.5,
+    "packSplitSeconds": 8.0
+  },
+  "velocityClasses": [
+    { "id": "hot", "name": "Hot", "linesPerShift": 420 },
+    { "id": "flow", "name": "Flow", "linesPerShift": 360 }
+  ],
+  "zones": [
+    { "run": "ASH", "velocity": "hot", "sampleStands": ["ASH-B"] },
+    { "run": "BIR", "velocity": "flow", "sampleStands": ["BIR-A", "BIR-B"] }
+  ],
+  "skills": [
+    { "id": "veteran", "name": "Veteran", "rateFactor": 1.0 },
+    { "id": "crew", "name": "Crew", "rateFactor": 0.8 }
+  ],
+  "sample": { "ticketId": "DS-014" }
+}
