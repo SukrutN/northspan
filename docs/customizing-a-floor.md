@@ -81,6 +81,63 @@ Ticket DS-014, returning to the gate.
 
 Walking time is distance divided by `speedMps`, plus dwell once per stop. `mustReturn: false` drops the leg back to the gate from both the plan and the sweep, so the comparison stays fair. The tour itself was still improved as a walk that could return.
 
+## Operation
+
+The rules price the cart. An operation prices the picker. It is a second file that shares the floor's id, and `standards` reads the two together:
+
+```bash
+dotnet run --project src/Northspan.Cli -- standards --floor <floor.json> --operation <operation.json>
+```
+
+The Dry Store operation is `fixtures/dry-store/operation.json`:
+
+```json
+{
+  "id": "case-pull",
+  "name": "Case pull",
+  "note": "A different operation on the second floor: full cases off the bins, heavier grabs, a shorter cart.",
+  "walk": {
+    "speedMps": 1.15,
+    "mustReturn": true,
+    "dwellSecondsPerStop": 0
+  },
+  "shiftSeconds": 28800,
+  "cartStops": 8,
+  "unitsPerLine": 6,
+  "tasks": {
+    "grabPerLineSeconds": 4.0,
+    "grabPerUnitSeconds": 4.0,
+    "countAndGiveSeconds": 1.0,
+    "cartManeuverSeconds": 5.0,
+    "putAndVerifySeconds": 2.5,
+    "packSplitSeconds": 8.0
+  },
+  "velocityClasses": [
+    { "id": "hot", "name": "Hot", "linesPerShift": 420 },
+    { "id": "flow", "name": "Flow", "linesPerShift": 360 }
+  ],
+  "zones": [
+    { "run": "ASH", "velocity": "hot", "sampleStands": ["ASH-B"] },
+    { "run": "BIR", "velocity": "flow", "sampleStands": ["BIR-A", "BIR-B"] }
+  ],
+  "skills": [
+    { "id": "veteran", "name": "Veteran", "rateFactor": 1.0 },
+    { "id": "crew", "name": "Crew", "rateFactor": 0.8 }
+  ],
+  "sample": { "ticketId": "DS-014" }
+}
+```
+
+- `tasks` is the task mix in seconds: grab once per line, grab per unit, count-and-give per unit, cart maneuver per stop, put-and-verify per line, and one pack split per ticket. These are the hands' charges from the operation's own time studies; the engine carries no constants of its own.
+- `shiftSeconds` is one picker's shift. `cartStops` is the cart's capacity in stops, so a zone tour of fewer stops shares its walking time across `floor(cartStops / stops)` tickets; the hands never share.
+- `velocityClasses` is the demand side: the lines per shift each class is expected to pull. Every zone names its class.
+- `sampleStands` are the faces whose stands make a zone's one-cart tour; they must be slots on the floor.
+- `skills` are bands with a `rateFactor`, and the report turns zone standards into a zone-times-band matrix.
+- `sample` names a ticket for the report's decomposition. The API resolves it from the floor's ticket fixtures; on the CLI, `--ticket <file>` charges the sample instead.
+- `walk` is the same shape as the rules above and works the same way: omit it and the demo clock prices the tours; `--rules <file>` on the CLI overrides it here too.
+
+The operation is checked before anything is printed: blank or repeated ids, a run the floor does not have, a face that is not a slot, a zone naming a velocity class the file never defined, or a run of the floor left out of `zones` are all rejected with the reason.
+
 ## Kiln Annex
 
 `fixtures/kiln-annex/floor.json` is the same shape: 38 by 26 m, runs Cinder, Loam, Flint, Reed, and Cobalt, the rear aisle on the north, the apron on the south, the gate at the west end of the apron, pack at the east. Sixty slots. The four house tickets live under `fixtures/kiln-annex/tickets/`. MR-204 is the 110.0 m walk.
