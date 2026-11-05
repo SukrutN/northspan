@@ -25,6 +25,9 @@ export function SiteHeader() {
           <Link href="/#method" className="text-muted-foreground transition-colors hover:text-foreground">
             Method
           </Link>
+          <Link href="/#standards" className="text-muted-foreground transition-colors hover:text-foreground">
+            Standards
+          </Link>
         </nav>
         <Link
           href="/plan"

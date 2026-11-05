@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsx src/lib/routing.test.ts"
+    "test": "tsx src/lib/routing.test.ts && tsx src/lib/standards.test.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
@@ -31,5 +31,9 @@
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "unrs-resolver@1.12.2": true
   }
 }

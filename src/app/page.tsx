@@ -3,12 +3,27 @@ import { buttonVariants } from "@/components/ui/button";
 import { FloorMap } from "@/components/floor-map";
 import { ORDERS } from "@/lib/orders";
 import { formatDuration, formatMetres, planWalk, walkSeconds, WALK_MPS } from "@/lib/routing";
+import { OPERATION, sampleMix, ZONE_STANDARDS } from "@/lib/standards";
 import { BAY_COUNT, FLOOR, RUNS } from "@/lib/warehouse";
 import { cn } from "cn";
 
 const demoOrder = ORDERS[0];
 const demo = planWalk(demoOrder.lines.map((line) => line.faceId));
 const savedPct = Math.round((demo.savedM / demo.sweepDistanceM) * 100);
+const sample = sampleMix();
+const cinder = ZONE_STANDARDS[0];
+const cinderSharedWalk = cinder.travelSeconds / cinder.ticketsPerCart;
+const cinderHands = cinder.secondsPerTicket - cinderSharedWalk;
+
+const BUCKET_COLOR: Record<string, string> = {
+  travel: "#e39a62",
+  grabPerLine: "#a8b9a4",
+  grabPerUnit: "#d6c3a1",
+  countAndGive: "#8f9e8b",
+  cartManeuver: "#b3a68b",
+  putAndVerify: "#c07d54",
+  packSplit: "#5c645c",
+};
 
 export default function HomePage() {
   return (
@@ -142,6 +157,177 @@ export default function HomePage() {
             <Spec term="Tour" value="Gate to gate" />
             <Spec term="Baseline" value="Serpentine aisle sweep" />
           </dl>
+        </div>
+      </section>
+
+      <section id="standards" className="scroll-mt-16 border-t border-border">
+        <div className="mx-auto max-w-[1180px] px-5 py-16 md:py-24">
+          <p className="eyebrow">04 — Standards</p>
+          <h2 className="section-title mt-4 max-w-3xl">The minutes behind the metres.</h2>
+
+          <div className="mt-10 grid gap-12 lg:grid-cols-12">
+            <div className="space-y-4 text-base text-muted-foreground lg:col-span-7">
+              <p>
+                The metres ask where the cart goes. The minutes ask what the picker does when the cart
+                is standing still. A counter-refill ticket pays seconds for every visit: hold the line,
+                3; take down a unit, 2; count and hand it over, 1.5; swing the cart into the bay, 4;
+                place and verify the line, 2; and the split at the pack bench, 6 once a ticket. Those
+                coefficients are fixture data — an operation file joined to the floor, the same way
+                the rules price the walk — not constants buried in the solver.
+              </p>
+              <p>
+                A tour is shared; the hands are not. Walking Cinder end to end costs{" "}
+                {formatDuration(cinder.travelSeconds)}, but the cart carries {OPERATION.cartStops}{" "}
+                stops, and a ticket that touches two of them owes a fifth:{" "}
+                {cinderSharedWalk.toFixed(1)} seconds of walking. The hands owe all of theirs — grab,
+                count, swing the cart, put and verify, and the pack split — {cinderHands.toFixed(0)}{" "}
+                seconds. One ticket is {cinder.secondsPerTicket.toFixed(1)} seconds all in,{" "}
+                {(cinder.mpuMinutes * 60).toFixed(1)} seconds a unit,{" "}
+                {cinder.unitsPerHour.toFixed(1)} units an hour, and {cinder.utilPercent.toFixed(1)}
+                percent of one picker&rsquo;s shift at Cinder&rsquo;s hot velocity.
+              </p>
+              <p>
+                Utilization is demand against capacity: the zone&rsquo;s lines per shift priced at the
+                standard, set against one picker&rsquo;s shift. Nothing here is learned from actuals;
+                the report is a pure function of the floor and the operation. Bands are a rate factor
+                on the zone&rsquo;s own number — the same walk, priced for a day shift or the night
+                desk — which is the card a foreman needs before anyone talks headcount.
+              </p>
+            </div>
+            <dl className="border border-border lg:col-span-5 lg:mt-16">
+              <Spec term="Operation" value={`${OPERATION.name} — ${OPERATION.id}`} />
+              <Spec term="Sample" value={`${sample.ticketId} ${sample.house}`} />
+              <Spec term="Shift" value={`${OPERATION.shiftSeconds / 3600} h at ${WALK_MPS} m/s`} />
+              <Spec term="Cart" value={`${OPERATION.cartStops} stops`} />
+              <Spec term="Units a line" value={String(OPERATION.unitsPerLine)} />
+              <Spec term="Bands" value="Veteran, day, night" />
+            </dl>
+          </div>
+
+          <div className="mt-14 overflow-x-auto border border-border">
+            <table className="w-full border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-border">
+                  {["Zone", "Stops", "Lines", "Units", "Tour", "Cart", "MPU", "MPL", "UPH", "Util"].map(
+                    (head, index) => (
+                      <th
+                        key={head}
+                        className={cn("eyebrow px-3 py-3", index === 0 ? "text-left" : "text-right")}
+                      >
+                        {head}
+                      </th>
+                    ),
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {ZONE_STANDARDS.map((zone) => (
+                  <tr key={zone.runCode} className="border-b border-border last:border-b-0">
+                    <td className="px-3 py-3">
+                      <span className="font-medium">{zone.runName}</span>
+                      <span className="ml-2 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                        {zone.velocity}
+                      </span>
+                    </td>
+                    <td className="px-3 py-3 text-right font-mono text-[13px]">{zone.stops}</td>
+                    <td className="px-3 py-3 text-right font-mono text-[13px]">{zone.lines}</td>
+                    <td className="px-3 py-3 text-right font-mono text-[13px]">{zone.units}</td>
+                    <td className="px-3 py-3 text-right font-mono text-[13px]">{zone.tourMetres.toFixed(1)}</td>
+                    <td className="px-3 py-3 text-right font-mono text-[13px]">{zone.ticketsPerCart}</td>
+                    <td className="px-3 py-3 text-right font-mono text-[13px]">{zone.mpuMinutes.toFixed(3)}</td>
+                    <td className="px-3 py-3 text-right font-mono text-[13px]">{zone.mplMinutes.toFixed(3)}</td>
+                    <td className="px-3 py-3 text-right font-mono text-[13px]">{zone.unitsPerHour.toFixed(1)}</td>
+                    <td className="px-3 py-3 text-right font-mono text-[13px]">{zone.utilPercent.toFixed(1)}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+            Minutes per unit and per line for one ticket of the counter-refill operation, one cart tour
+            of {OPERATION.cartStops} stops shared across the tickets, the hands charged in full. Tour is
+            the planned gate-to-gate metres for the zone&rsquo;s own faces; cart is how many tickets the
+            walking splits across.
+          </p>
+
+          <div className="mt-14 grid gap-12 lg:grid-cols-12">
+            <figure className="lg:col-span-7">
+              <div className="flex h-10 w-full overflow-hidden border border-border">
+                {sample.buckets.map((bucket) => (
+                  <div
+                    key={bucket.kind}
+                    style={{
+                      flexGrow: bucket.seconds,
+                      flexBasis: 0,
+                      backgroundColor: BUCKET_COLOR[bucket.kind],
+                    }}
+                    title={`${bucket.label} — ${formatDuration(bucket.seconds)}`}
+                  />
+                ))}
+              </div>
+              <figcaption className="eyebrow mt-3">
+                Fig. 02 — Ticket {sample.ticketId}, {sample.house}, priced by the operation
+              </figcaption>
+              <p className="mt-2 max-w-xl text-sm text-muted-foreground">
+                {sample.ticketId} is a real ticket: five lines, ten units, a published{" "}
+                {formatMetres(110)} walk at {WALK_MPS} m/s. The bar is the whole ticket,{" "}
+                {formatDuration(sample.totalSeconds)}: the walk{" "}
+                {(100 * (sample.travelSeconds / sample.totalSeconds)).toFixed(0)} percent, the hands the
+                rest. Half the ticket was never at a face at all.
+              </p>
+            </figure>
+            <div className="lg:col-span-5">
+              <p className="eyebrow">Units per hour, zone by band</p>
+              <table className="mt-4 w-full border-collapse text-sm">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="eyebrow px-3 py-3 text-left">Zone</th>
+                    {ZONE_STANDARDS[0].skills.map((band) => (
+                      <th key={band.id} className="eyebrow px-3 py-3 text-right">
+                        {band.name}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {ZONE_STANDARDS.map((zone) => (
+                    <tr key={zone.runCode} className="border-b border-border last:border-b-0">
+                      <td className="px-3 py-3 font-medium">{zone.runName}</td>
+                      {zone.skills.map((band) => (
+                        <td key={band.id} className="px-3 py-3 text-right font-mono text-[13px]">
+                          {band.unitsPerHour.toFixed(1)}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p className="mt-3 text-sm text-muted-foreground">
+                The same zone standard scaled by band. Day works at a factor of 0.85 on a veteran,
+                night at 0.7.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-14 border-t border-border pt-6">
+            <p className="max-w-3xl text-sm text-muted-foreground">
+              Where the numbers come from: the operating-cost case for picking standards is made in
+              de Koster, Le-Duc, and Roodbergen, &ldquo;Design and control of warehouse order
+              picking,&rdquo; <em>European Journal of Operational Research</em> 182(2), 2007 — order
+              picking is commonly priced at about 55 percent of warehouse operating cost. The
+              vocabulary of travel and pick, and the tour-vs-sweep framing, are Bartholdi and
+              Hackman&rsquo;s <em>Warehouse &amp; Distribution Science</em>. The exact tour through a
+              rectangular warehouse is Ratliff and Rosenthal, <em>Operations Research</em> 31(3),
+              1983; the heuristic in this engine is its honest cousin. The coefficients live in the{" "}
+              <a
+                href="https://github.com/SukrutN/northspan-engine"
+                className="underline underline-offset-4"
+              >
+                engine&rsquo;s operation fixture
+              </a>{" "}
+              and are locked by tests on both sides.
+            </p>
+          </div>
         </div>
       </section>
     </>

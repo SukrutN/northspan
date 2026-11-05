@@ -17,6 +17,9 @@ export function SiteFooter() {
           <Link href="/#method" className="hover:text-foreground">
             Method
           </Link>
+          <Link href="/#standards" className="hover:text-foreground">
+            Standards
+          </Link>
         </div>
       </div>
     </footer>
