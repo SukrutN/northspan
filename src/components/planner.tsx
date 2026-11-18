@@ -200,7 +200,7 @@ export function Planner({ initialOrderId }: { initialOrderId: string | null }) {
           stops={stops}
           interactive
           pending={status === "loading"}
-          caption="Fig. 02 — Kiln Annex, looking north"
+          caption="Fig. 02. Kiln Annex, looking north"
           onToggle={toggleFace}
         />
         </div>
@@ -354,20 +354,20 @@ function Metrics({
   return (
     <section className="mt-8 border border-border" aria-live="polite">
       <div className="grid grid-cols-2 lg:grid-cols-4">
-        <Metric label="Distance" value={loading ? "…" : readyPlan ? formatMetres(readyPlan.distanceM) : "—"} hint={readyPlan ? "Gate to gate" : "No walk yet"} />
+        <Metric label="Distance" value={loading ? "…" : readyPlan ? formatMetres(readyPlan.distanceM) : ". "} hint={readyPlan ? "Gate to gate" : "No walk yet"} />
         <Metric
           label="Walk time"
-          value={loading ? "…" : readyPlan ? formatDuration(walkSeconds(readyPlan.distanceM)) : "—"}
+          value={loading ? "…" : readyPlan ? formatDuration(walkSeconds(readyPlan.distanceM)) : ". "}
           hint={readyPlan ? `${WALK_MPS} m/s, loaded cart` : "Reach at the face not included"}
         />
         <Metric
           label="Stops"
-          value={loading ? "…" : readyPlan ? String(readyPlan.stops.length) : "—"}
+          value={loading ? "…" : readyPlan ? String(readyPlan.stops.length) : ". "}
           hint={lines === 0 ? "Cart is empty" : `${lines} line${lines === 1 ? "" : "s"} on the cart`}
         />
         <Metric
           label="Versus sweep"
-          value={loading ? "…" : saved ? saved.headline : "—"}
+          value={loading ? "…" : saved ? saved.headline : ". "}
           hint={loading ? "Comparing with the serpentine" : saved ? saved.detail : "Aisle sweep, west to east"}
         />
       </div>

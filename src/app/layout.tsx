@@ -20,8 +20,8 @@ const mono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Northspan — pick paths for one floor",
-    template: "%s — Northspan",
+    default: "Northspan, pick paths for one floor",
+    template: "%s. Northspan",
   },
   description:
     "Plan a picker’s walk on Kiln Annex. Northspan measures aisle distance, shortens the route, and compares it with a plain sweep.",
