@@ -30,7 +30,7 @@ export default function HomePage() {
     <>
       <section className="border-b border-border">
         <div className="mx-auto max-w-[1180px] px-5 pt-14 pb-12 md:pt-24 md:pb-16">
-          <p className="eyebrow">01 — Pick paths</p>
+          <p className="eyebrow">01. Pick paths</p>
           <div className="mt-6 grid items-end gap-8 lg:grid-cols-12">
             <h1 className="display lg:col-span-8">Walk the floor once.</h1>
             <div className="flex flex-col gap-4 text-[15px] leading-snug lg:col-span-4">
@@ -65,7 +65,7 @@ export default function HomePage() {
             sweepPolyline={demo.sweepPolyline}
             showSweep
             stops={demo.stops.map((stop, index) => ({ x: stop.x, y: stop.y, n: index + 1 }))}
-            caption={`Fig. 01 — ${demoOrder.house}, ticket ${demoOrder.id}`}
+            caption={`Fig. 01. ${demoOrder.house}, ticket ${demoOrder.id}`}
           />
           <div className="mt-2 flex flex-col gap-3 px-3 pb-2 sm:flex-row sm:items-end sm:justify-between md:px-1">
             <p className="max-w-lg text-sm text-floor-ink/75">
@@ -104,7 +104,7 @@ export default function HomePage() {
 
       <section className="border-b border-border">
         <div className="mx-auto max-w-[1180px] px-5 py-16 md:py-24">
-          <p className="eyebrow">02 — On the floor</p>
+          <p className="eyebrow">02. On the floor</p>
           <h2 className="section-title mt-4 max-w-3xl">Three moves, and the cart is committed.</h2>
           <ol className="mt-12 grid gap-10 md:grid-cols-3">
             <li>
@@ -135,14 +135,14 @@ export default function HomePage() {
       <section id="method" className="scroll-mt-16">
         <div className="mx-auto grid max-w-[1180px] gap-12 px-5 py-16 md:py-24 lg:grid-cols-12">
           <div className="lg:col-span-7">
-            <p className="eyebrow">03 — Method</p>
+            <p className="eyebrow">03. Method</p>
             <h2 className="section-title mt-4">How the metres are counted.</h2>
             <div className="mt-6 space-y-4 text-base text-muted-foreground">
               <p>
                 Kiln Annex is a single floor, {FLOOR.width} by {FLOOR.height} metres, with {RUNS.length} runs and {BAY_COUNT} bays a side. The apron gate sits on the south cross-aisle. Every tour starts there and returns there, because the cart does not stay in the aisle.
               </p>
               <p>
-                A nearest-neighbour pass chooses the closest remaining stop under that aisle distance, with ties broken by location so the same list always draws the same walk. Two-opt then tries reversing stretches of the tour. If a reversal is shorter, it stays. The same untangling is tried on a serpentine sweep — runs from west to east, direction alternating — and the shorter of the two improved tours is the one drawn in oxide.
+                A nearest-neighbour pass chooses the closest remaining stop under that aisle distance, with ties broken by location so the same list always draws the same walk. Two-opt then tries reversing stretches of the tour. If a reversal is shorter, it stays. The same untangling is tried on a serpentine sweep, runs from west to east, direction alternating, and the shorter of the two improved tours is the one drawn in oxide.
               </p>
               <p>
                 The comparison number is the sweep before any improvement. That is the naive walk: finish a run, step to the next, do not look ahead. On a list that already snakes cleanly, the two match, and the floor says so.
@@ -162,7 +162,7 @@ export default function HomePage() {
 
       <section id="standards" className="scroll-mt-16 border-t border-border">
         <div className="mx-auto max-w-[1180px] px-5 py-16 md:py-24">
-          <p className="eyebrow">04 — Standards</p>
+          <p className="eyebrow">04. Standards</p>
           <h2 className="section-title mt-4 max-w-3xl">The minutes behind the metres.</h2>
 
           <div className="mt-10 grid gap-12 lg:grid-cols-12">
@@ -172,15 +172,15 @@ export default function HomePage() {
                 is standing still. A counter-refill ticket pays seconds for every visit: hold the line,
                 3; take down a unit, 2; count and hand it over, 1.5; swing the cart into the bay, 4;
                 place and verify the line, 2; and the split at the pack bench, 6 once a ticket. Those
-                coefficients are fixture data — an operation file joined to the floor, the same way
-                the rules price the walk — not constants buried in the solver.
+                coefficients are fixture data, an operation file joined to the floor, the same way
+                the rules price the walk, not constants buried in the solver.
               </p>
               <p>
                 A tour is shared; the hands are not. Walking Cinder end to end costs{" "}
                 {formatDuration(cinder.travelSeconds)}, but the cart carries {OPERATION.cartStops}{" "}
                 stops, and a ticket that touches two of them owes a fifth:{" "}
-                {cinderSharedWalk.toFixed(1)} seconds of walking. The hands owe all of theirs — grab,
-                count, swing the cart, put and verify, and the pack split — {cinderHands.toFixed(0)}{" "}
+                {cinderSharedWalk.toFixed(1)} seconds of walking. The hands owe all of theirs, grab,
+                count, swing the cart, put and verify, and the pack split. {cinderHands.toFixed(0)}{" "}
                 seconds. One ticket is {cinder.secondsPerTicket.toFixed(1)} seconds all in,{" "}
                 {(cinder.mpuMinutes * 60).toFixed(1)} seconds a unit,{" "}
                 {cinder.unitsPerHour.toFixed(1)} units an hour, and {cinder.utilPercent.toFixed(1)}
@@ -190,12 +190,12 @@ export default function HomePage() {
                 Utilization is demand against capacity: the zone&rsquo;s lines per shift priced at the
                 standard, set against one picker&rsquo;s shift. Nothing here is learned from actuals;
                 the report is a pure function of the floor and the operation. Bands are a rate factor
-                on the zone&rsquo;s own number — the same walk, priced for a day shift or the night
-                desk — which is the card a foreman needs before anyone talks headcount.
+                on the zone&rsquo;s own number, the same walk, priced for a day shift or the night
+                desk, which is the card a foreman needs before anyone talks headcount.
               </p>
             </div>
             <dl className="border border-border lg:col-span-5 lg:mt-16">
-              <Spec term="Operation" value={`${OPERATION.name} — ${OPERATION.id}`} />
+              <Spec term="Operation" value={`${OPERATION.name}. ${OPERATION.id}`} />
               <Spec term="Sample" value={`${sample.ticketId} ${sample.house}`} />
               <Spec term="Shift" value={`${OPERATION.shiftSeconds / 3600} h at ${WALK_MPS} m/s`} />
               <Spec term="Cart" value={`${OPERATION.cartStops} stops`} />
@@ -261,12 +261,12 @@ export default function HomePage() {
                       flexBasis: 0,
                       backgroundColor: BUCKET_COLOR[bucket.kind],
                     }}
-                    title={`${bucket.label} — ${formatDuration(bucket.seconds)}`}
+                    title={`${bucket.label}. ${formatDuration(bucket.seconds)}`}
                   />
                 ))}
               </div>
               <figcaption className="eyebrow mt-3">
-                Fig. 02 — Ticket {sample.ticketId}, {sample.house}, priced by the operation
+                Fig. 02. Ticket {sample.ticketId}, {sample.house}, priced by the operation
               </figcaption>
               <p className="mt-2 max-w-xl text-sm text-muted-foreground">
                 {sample.ticketId} is a real ticket: five lines, ten units, a published{" "}
@@ -313,12 +313,12 @@ export default function HomePage() {
             <p className="max-w-3xl text-sm text-muted-foreground">
               Where the numbers come from: the operating-cost case for picking standards is made in
               de Koster, Le-Duc, and Roodbergen, &ldquo;Design and control of warehouse order
-              picking,&rdquo; <em>European Journal of Operational Research</em> 182(2), 2007 — order
+              picking,&rdquo; <em>European Journal of Operational Research</em> 182(2), 2007, order
               picking is commonly priced at about 55 percent of warehouse operating cost. The
               vocabulary of travel and pick, and the tour-vs-sweep framing, are Bartholdi and
               Hackman&rsquo;s <em>Warehouse &amp; Distribution Science</em>. The exact tour through a
               rectangular warehouse is Ratliff and Rosenthal, <em>Operations Research</em> 31(3),
-              1983; the heuristic in this engine is its honest cousin. The coefficients live in the{" "}
+              1983. The walk in this engine is a simpler version of that result. The coefficients live in the{" "}
               <a
                 href="https://github.com/SukrutN/northspan-engine"
                 className="underline underline-offset-4"
