@@ -1,0 +1,25 @@
+{
+  "id": "my-floor",
+  "name": "My Floor",
+  "widthM": 20,
+  "heightM": 15,
+  "crossAisles": [
+    { "id": "front", "name": "Front aisle", "y": 2 },
+    { "id": "back", "name": "Back aisle", "y": 13 }
+  ],
+  "gate": {
+    "id": "GATE",
+    "name": "Gate",
+    "x": 1,
+    "y": 2
+  },
+  "runs": [
+    { "code": "A", "name": "Run A", "x": 6 },
+    { "code": "B", "name": "Run B", "x": 14 }
+  ],
+  "slots": [
+    { "code": "A-01-W", "run": "A", "stand": "A-01", "alongM": 4, "item": "Widget, small" },
+    { "code": "A-01-E", "run": "A", "stand": "A-01", "alongM": 4 },
+    { "code": "B-02-W", "run": "B", "stand": "B-02", "alongM": 7, "item": "Gadget, large" }
+  ]
+}
