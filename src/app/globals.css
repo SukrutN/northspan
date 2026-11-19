@@ -1,0 +1,418 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: var(--font-plex), ui-monospace, SFMono-Regular, monospace;
+  --font-heading: var(--font-inter-tight), var(--font-inter), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --color-floor: var(--floor);
+  --color-floor-ink: var(--floor-ink);
+  --color-route: var(--route);
+  --color-sweep: var(--sweep);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: var(--radius);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.5);
+  --radius-2xl: calc(var(--radius) * 2);
+  --radius-3xl: calc(var(--radius) * 2.5);
+  --radius-4xl: calc(var(--radius) * 3);
+}
+
+/*
+ * Northspan theme, after opentrade.io.
+ * Light pages sit on cream #faf7f5 with oxblood ink #2f0705; dark bands on the
+ * same oxblood with sand text #efe4d7; brand orange #ff5b2e carries every
+ * accent, and the footer closes on the oxblood → orange → cream gradient.
+ */
+:root {
+  --background: #faf7f5;
+  --foreground: #2f0705;
+  --card: #ffffff;
+  --card-foreground: #2f0705;
+  --popover: #ffffff;
+  --popover-foreground: #2f0705;
+  --primary: #2f0705;
+  --primary-foreground: #efe4d7;
+  --secondary: #efe4d7;
+  --secondary-foreground: #2f0705;
+  --muted: #efe4d7;
+  --muted-foreground: color-mix(in srgb, #2f0705 62%, #efe4d7);
+  --accent: #ff5b2e;
+  --accent-foreground: #331209;
+  --destructive: #9d2f16;
+  --border: color-mix(in srgb, #2f0705 20%, transparent);
+  --input: color-mix(in srgb, #2f0705 20%, transparent);
+  --ring: #2f0705;
+  --floor: #2f0705;
+  --floor-ink: #efe4d7;
+  --route: #ff5b2e;
+  --sweep: #c9b8ad;
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.25rem;
+  --sidebar: #faf7f5;
+  --sidebar-foreground: #2f0705;
+  --sidebar-primary: #2f0705;
+  --sidebar-primary-foreground: #efe4d7;
+  --sidebar-accent: #efe4d7;
+  --sidebar-accent-foreground: #2f0705;
+  --sidebar-border: color-mix(in srgb, #2f0705 20%, transparent);
+  --sidebar-ring: #2f0705;
+}
+
+.dark {
+  --background: #2f0705;
+  --foreground: #efe4d7;
+  --card: #4d2523;
+  --card-foreground: #efe4d7;
+  --popover: #4d2523;
+  --popover-foreground: #efe4d7;
+  --primary: #efe4d7;
+  --primary-foreground: #2f0705;
+  --secondary: #4d2523;
+  --secondary-foreground: #efe4d7;
+  --muted: #4d2523;
+  --muted-foreground: color-mix(in srgb, #efe4d7 60%, #2f0705);
+  --accent: #ff5b2e;
+  --accent-foreground: #331209;
+  --destructive: #e35c3a;
+  --border: color-mix(in srgb, #efe4d7 20%, transparent);
+  --input: color-mix(in srgb, #efe4d7 20%, transparent);
+  --ring: #efe4d7;
+  --floor: #210a07;
+  --floor-ink: #efe4d7;
+  --route: #ff5b2e;
+  --sweep: #c9b8ad;
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: #4d2523;
+  --sidebar-foreground: #efe4d7;
+  --sidebar-primary: #efe4d7;
+  --sidebar-primary-foreground: #2f0705;
+  --sidebar-accent: #4d2523;
+  --sidebar-accent-foreground: #efe4d7;
+  --sidebar-border: color-mix(in srgb, #efe4d7 20%, transparent);
+  --sidebar-ring: #efe4d7;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  html {
+    @apply font-sans;
+  }
+  ::selection {
+    background-color: color-mix(in srgb, #ff5b2e 45%, #ffffff);
+    color: #2f0705;
+  }
+}
+
+/* Typography — opentrade.io scale: grotesque display at -0.02em, mono labels. */
+
+.display {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.03;
+  font-size: clamp(2.75rem, 5.5vw, 5.5rem);
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.03;
+  font-size: clamp(2.25rem, 3.75vw, 3rem);
+}
+
+.eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.5;
+}
+
+/* Gradient-wave headings, keyed to the GSAP timings in opentrade.io's own
+   initGradientWaveText: a 120ms ease-out rise into brand orange, then a 280ms
+   ease-in settle into the heading colour; deactivations fall back over 200ms
+   linear. Without scripting the text renders in its final colour. */
+
+.wave-char {
+  color: inherit;
+}
+
+.wave-char[data-active="false"] {
+  color: #c9b8ad;
+  transition: color 200ms linear;
+}
+
+.wave-char[data-flash="true"] {
+  animation: wave-flash 400ms;
+}
+
+@keyframes wave-flash {
+  0% {
+    color: #c9b8ad;
+    animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+  }
+  30% {
+    color: #ff5b2e;
+    animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  100% {
+    color: inherit;
+  }
+}
+
+/* Rolling odometer digits. Rows are 1.05em; the mask shows exactly one row. */
+
+.odo-mask {
+  display: inline-block;
+  height: 1.05em;
+  line-height: 1.05;
+  overflow: clip;
+}
+
+.odo-roller {
+  display: block;
+  will-change: transform;
+}
+
+.odo-roller > span {
+  display: block;
+  height: 1.05em;
+}
+
+[data-phase="settled"] .odo-roller,
+[data-phase="armed"] .odo-roller {
+  transition: none;
+}
+
+[data-phase="rolling"] .odo-roller {
+  transition: transform 1s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Sheen highlight for the footer call, straight from opentrade.io. */
+
+.text-sheen {
+  position: relative;
+  display: inline-block;
+  background-image: linear-gradient(
+    90deg,
+    #ff5b2e 0%,
+    #f4df99 18%,
+    color-mix(in oklab, #ff5b2e 56%, #504414) 32%,
+    #ff5b2e 50%,
+    #f4df99 68%,
+    color-mix(in oklab, #ff5b2e 56%, #504414) 84%,
+    #ff5b2e 100%
+  );
+  background-size: 220% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 0.6em color-mix(in srgb, #ff5b2e 35%, transparent));
+  animation: sheen-slide 10s linear infinite;
+}
+
+@keyframes sheen-slide {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 91.6667% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-sheen {
+    animation: none;
+    background-position: 66% 50%;
+  }
+}
+
+/* Header hides on the way down, returns on the way up. */
+
+.site-header-inner {
+  transition: transform 400ms ease;
+}
+
+[data-nav-hidden="true"] .site-header-inner {
+  transform: translateY(-130%);
+}
+
+/* Grain, the texture opentrade.io lays over its dark bands. */
+
+.grain {
+  position: relative;
+  isolation: isolate;
+}
+
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+  opacity: 0.05;
+}
+
+/* Sticky step cards stack while the section scrolls, after the product
+   card stack on opentrade.io; plain flow on smaller screens. */
+
+.step-card {
+  position: sticky;
+  top: 6.5rem;
+  box-shadow: 0 -1.5rem 2.5rem -1.75rem rgba(47, 7, 5, 0.3);
+}
+
+@media (max-width: 991px) {
+  .step-card {
+    position: relative;
+    top: auto;
+    box-shadow: none;
+  }
+}
+
+/* Stocked-face dots breathe, one slow pulse across the hero map. */
+
+.face-dot {
+  animation: dot-breathe 5s ease-in-out infinite;
+}
+
+@keyframes dot-breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+/* The cycling ticket slot in the hero, after the logo wall's swap: each
+   ticket slides up into place over 1.2 seconds, expo in and out. */
+
+.cycle-in {
+  animation: cycle-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes cycle-in {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Floor map motion. */
+
+.face-cell {
+  transition: fill 160ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.route-path {
+  animation: route-draw 1.15s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.stop-mark {
+  animation: stop-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes route-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes stop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-path,
+  .stop-mark,
+  .face-cell,
+  .face-dot {
+    animation: none;
+    transition: none;
+    stroke-dashoffset: 0 !important;
+  }
+  .wave-char,
+  .wave-char[data-active="false"] {
+    color: inherit;
+    transition: none;
+  }
+  .odo-roller {
+    transition: none !important;
+  }
+  .site-header-inner {
+    transition: none;
+  }
+  .face-dot,
+  .cycle-in {
+    animation: none;
+  }
+  .hero-video {
+    display: none;
+  }
+}
