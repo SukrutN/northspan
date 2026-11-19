@@ -1,5 +1,7 @@
 # Northspan
 
+Live site: https://sukrutn.github.io/northspan/
+
 Northspan plans a picker’s walk on a single warehouse floor. The worked example is Kiln Annex: five runs, an apron gate, and a cart that has to stay in the aisles. The same floor carries a labour standard: with the counter-refill operation’s task mix — grab per line, grab per unit, count-and-give, cart maneuver, put-and-verify, pack split — every zone prices out in minutes per unit, minutes per line, units per hour, and utilization, with a zone-times-band matrix for the foreman.
 
 Give it a pick list. It returns a short tour from the gate and back, drawn on the floor, with distance, walk time, stops, and a comparison against a serpentine aisle sweep. The standards section on the front page prices the same tours by the minute.
