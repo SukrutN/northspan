@@ -2,7 +2,7 @@
 
 A stateless pick-path planner. A warehouse system already has the order and the slot map. This service takes a floor, a list of location codes, and walking rules, and returns a cart walk plus the cost of a plain aisle sweep. Given the operation file for a floor it also prices labour: minutes per unit, minutes per line, and units per hour for every zone the operation covers.
 
-The [Northspan website](https://github.com/SukrutN/northspan) is the showcase for this planner. It is a separate product. Kiln Annex is fixture data in this repository, not a set of constants inside the solver.
+This engine lives at `engine/` in the [Northspan](https://github.com/SukrutN/northspan) site repository, its full history carried over from the old `northspan-engine` repository. The website is the showcase for this planner, and the standards it prices read the published operation fixture below. Kiln Annex is fixture data in this repository, not a set of constants inside the solver.
 
 ## Requirements
 
@@ -11,7 +11,7 @@ The [Northspan website](https://github.com/SukrutN/northspan) is the showcase fo
 ## Test
 
 ```bash
-dotnet test
+dotnet test engine/Northspan.slnx
 ```
 
 The characterization tests lock the Kiln Annex ticket MR-204 (Merrow Chandlery) to the walk published on the site: 110.0 m planned, 150.8 m sweep, five stops, 1.15 m/s, 1 min 36 sec. SH-118, PD-077, and NB-012 (Night desk) are covered the same way. A second floor, Dry Store, is a different graph.
@@ -19,9 +19,9 @@ The characterization tests lock the Kiln Annex ticket MR-204 (Merrow Chandlery) 
 ## Plan a walk
 
 ```bash
-dotnet run --project src/Northspan.Cli -- walk \
-  --floor fixtures/kiln-annex/floor.json \
-  --ticket fixtures/kiln-annex/tickets/mr-204.json
+dotnet run --project engine/src/Northspan.Cli -- walk \
+  --floor engine/fixtures/kiln-annex/floor.json \
+  --ticket engine/fixtures/kiln-annex/tickets/mr-204.json
 ```
 
 Optional `--rules <file>`. When the flag is omitted the demo clock is used: 1.15 m/s, return to the gate, no dwell at the face.
@@ -43,15 +43,15 @@ Sweep     150.8 m   before improvement
 Shorter   40.8 m   27%
 ```
 
-Dry Store is the same command with `fixtures/dry-store/floor.json` and `fixtures/dry-store/tickets/ds-014.json`.
+Dry Store is the same command with `engine/fixtures/dry-store/floor.json` and `engine/fixtures/dry-store/tickets/ds-014.json`.
 
 ## Build the standards
 
 ```bash
-dotnet run --project src/Northspan.Cli -- standards \
-  --floor fixtures/kiln-annex/floor.json \
-  --operation fixtures/kiln-annex/operation.json \
-  --ticket fixtures/kiln-annex/tickets/mr-204.json
+dotnet run --project engine/src/Northspan.Cli -- standards \
+  --floor engine/fixtures/kiln-annex/floor.json \
+  --operation engine/fixtures/kiln-annex/operation.json \
+  --ticket engine/fixtures/kiln-annex/tickets/mr-204.json
 ```
 
 An operation is the second file a floor carries. It joins the task mix (grab per line, grab per unit, count-and-give, cart maneuver, put-and-verify, pack split), the shift, the cart's stop count, the units on a line, the lines per shift of each velocity class, the skill bands, and — for every run the operation covers — the slot faces that stand for its one-cart tour. The engine owns no labour constants: everything below is read from the files the same way the walk is.
@@ -91,14 +91,14 @@ Sample MR-204 — 3 min 02 sec for the ticket
   pack split            6 sec  3.3%
 ```
 
-`--ticket` names the sample: the report decomposes one real ticket into the same seven activities. The tour-first reading (price the walk, then the hands along it) and the standard-first reading (price a zone cycle, then amortize the walk) must agree, and the characterization tests hold them together to five decimals besides locking every cell of the table above. Dry Store's `fixtures/dry-store/operation.json` is a different operation — case pull, two units of six to the line — and is locked the same way.
+`--ticket` names the sample: the report decomposes one real ticket into the same seven activities. The tour-first reading (price the walk, then the hands along it) and the standard-first reading (price a zone cycle, then amortize the walk) must agree, and the characterization tests hold them together to five decimals besides locking every cell of the table above. Dry Store's `engine/fixtures/dry-store/operation.json` is a different operation — case pull, two units of six to the line — and is locked the same way.
 
 The API serves the same report: `GET /v1/floors/{floorId}/standards`.
 
 ## Run the API
 
 ```bash
-dotnet run --project src/Northspan.Api
+dotnet run --project engine/src/Northspan.Api
 ```
 
 The development profile listens on `http://127.0.0.1:47231`.
