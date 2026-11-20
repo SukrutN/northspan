@@ -12,9 +12,12 @@
  * improvement, is the naive comparison.
  */
 
+import operationJson from "../../engine/fixtures/kiln-annex/operation.json";
+
 import { DOCK, FLOOR, getFace, type Face } from "@/lib/warehouse";
 
-export const WALK_MPS = 1.15;
+/** The operation's walk clock, read from the engine's published fixture. */
+export const WALK_MPS: number = operationJson.walk.speedMps;
 
 export interface WalkPoint {
   key: string;
