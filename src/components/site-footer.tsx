@@ -9,6 +9,7 @@ export function SiteFooter() {
           <p className="mt-1 max-w-sm">
             Pick paths for one floor. Kiln Annex is a worked model, not a live warehouse.
           </p>
+          <p className="mt-1 text-xs">Built by Sukrut Nadigotti</p>
         </div>
         <div className="flex gap-5 font-mono text-[11px] tracking-[0.14em] uppercase">
           <Link href="/plan" className="hover:text-foreground">

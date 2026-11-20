@@ -34,9 +34,7 @@ export default function HomePage() {
           <div className="mt-6 grid items-end gap-8 lg:grid-cols-12">
             <h1 className="display lg:col-span-8">Walk the floor once.</h1>
             <div className="flex flex-col gap-4 text-[15px] leading-snug lg:col-span-4">
-              <p>Out from the apron gate.</p>
-              <p>Along the runs a cart can use.</p>
-              <p>Back before the next ticket.</p>
+              <p>Every tour starts at the apron gate, stays in the aisles, and is back before the next ticket.</p>
             </div>
           </div>
           <p className="mt-8 max-w-xl text-base text-muted-foreground md:text-[1.05rem]">
@@ -145,7 +143,7 @@ export default function HomePage() {
                 A nearest-neighbour pass chooses the closest remaining stop under that aisle distance, with ties broken by location so the same list always draws the same walk. Two-opt then tries reversing stretches of the tour. If a reversal is shorter, it stays. The same untangling is tried on a serpentine sweep, runs from west to east, direction alternating, and the shorter of the two improved tours is the one drawn in oxide.
               </p>
               <p>
-                The comparison number is the sweep before any improvement. That is the naive walk: finish a run, step to the next, do not look ahead. On a list that already snakes cleanly, the two match, and the floor says so.
+                The comparison number is the sweep before any improvement. That is the naive walk: finish a run, step to the next, do not look ahead. On a ticket that already snakes cleanly, the two come out equal.
               </p>
             </div>
           </div>
@@ -176,7 +174,7 @@ export default function HomePage() {
                 the rules price the walk, not constants buried in the solver.
               </p>
               <p>
-                A tour is shared; the hands are not. Walking Cinder end to end costs{" "}
+                The tour is shared across tickets; the hands are not. Walking Cinder end to end costs{" "}
                 {formatDuration(cinder.travelSeconds)}, but the cart carries {OPERATION.cartStops}{" "}
                 stops, and a ticket that touches two of them owes a fifth:{" "}
                 {cinderSharedWalk.toFixed(1)} seconds of walking. The hands owe all of theirs, grab,
