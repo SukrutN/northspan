@@ -320,7 +320,7 @@ export default function HomePage() {
               rectangular warehouse is Ratliff and Rosenthal, <em>Operations Research</em> 31(3),
               1983. The walk in this engine is a simpler version of that result. The coefficients live in the{" "}
               <a
-                href="https://github.com/SukrutN/northspan-engine"
+                href="https://github.com/SukrutN/northspan/blob/main/engine/fixtures/kiln-annex/operation.json"
                 className="underline underline-offset-4"
               >
                 engine&rsquo;s operation fixture

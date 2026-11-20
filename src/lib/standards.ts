@@ -12,41 +12,54 @@
  * much of one picker's shift a zone's lines per shift take. The bands
  * scale the zone standard by a rate factor into a zone-times-band matrix.
  *
- * The coefficients are the engine's fixture operation (fixtures/
- * kiln-annex/operation.json), not constants invented for the page. The
- * characterization tests here lock the same table the engine's CLI
- * prints.
+ * The operation — task mix, shift, cart stops, velocity classes, zones,
+ * and skill bands — is read from the engine's published fixture
+ * (engine/fixtures/kiln-annex/operation.json), not constants invented
+ * for the page. The characterization tests here lock the same table the
+ * engine's CLI prints.
  */
+
+import operationJson from "../../engine/fixtures/kiln-annex/operation.json";
 
 import { ORDERS } from "@/lib/orders";
 import { planWalk, walkSeconds } from "@/lib/routing";
 import { RUNS } from "@/lib/warehouse";
 
+/** The engine's operation document for Kiln Annex, exactly as its CLI reads it. */
+const OPERATION_SPEC = operationJson;
+
 export const OPERATION = {
-  id: "counter-refill",
-  name: "Counter refill",
+  id: OPERATION_SPEC.id,
+  name: OPERATION_SPEC.name,
+  /** The worked ticket's house label, carried by the MR-204 ticket itself. */
   ticket: "Counter refill, ship Friday",
-  shiftSeconds: 28800,
-  cartStops: 10,
-  unitsPerLine: 2,
-} as const;
+  shiftSeconds: OPERATION_SPEC.shiftSeconds,
+  cartStops: OPERATION_SPEC.cartStops,
+  unitsPerLine: OPERATION_SPEC.unitsPerLine,
+};
 
 export const TASKS = {
-  grabPerLine: 3.0,
-  grabPerUnit: 2.0,
-  countAndGive: 1.5,
-  cartManeuver: 4.0,
-  putAndVerify: 2.0,
-  packSplit: 6.0,
-} as const;
+  grabPerLine: OPERATION_SPEC.tasks.grabPerLineSeconds,
+  grabPerUnit: OPERATION_SPEC.tasks.grabPerUnitSeconds,
+  countAndGive: OPERATION_SPEC.tasks.countAndGiveSeconds,
+  cartManeuver: OPERATION_SPEC.tasks.cartManeuverSeconds,
+  putAndVerify: OPERATION_SPEC.tasks.putAndVerifySeconds,
+  packSplit: OPERATION_SPEC.tasks.packSplitSeconds,
+};
 
-const VELOCITY_CLASSES = {
-  hot: 1140,
-  flow: 960,
-  calm: 600,
-} as const;
+export type VelocityClassId = "hot" | "flow" | "calm";
 
-export type VelocityClassId = keyof typeof VELOCITY_CLASSES;
+function velocityLines(id: VelocityClassId): number {
+  const cls = OPERATION_SPEC.velocityClasses.find((entry) => entry.id === id);
+  if (!cls) throw new Error(`The operation publishes no ${id} velocity class.`);
+  return cls.linesPerShift;
+}
+
+const VELOCITY_CLASSES: Record<VelocityClassId, number> = {
+  hot: velocityLines("hot"),
+  flow: velocityLines("flow"),
+  calm: velocityLines("calm"),
+};
 
 export interface ZoneSpec {
   run: string;
@@ -54,19 +67,17 @@ export interface ZoneSpec {
   faces: string[];
 }
 
-export const SKILLS = [
-  { id: "veteran", name: "Veteran", factor: 1.0 },
-  { id: "day", name: "Day", factor: 0.85 },
-  { id: "night", name: "Night", factor: 0.7 },
-] as const;
+export const SKILLS = OPERATION_SPEC.skills.map((skill) => ({
+  id: skill.id,
+  name: skill.name,
+  factor: skill.rateFactor,
+}));
 
-const ZONES: readonly ZoneSpec[] = [
-  { run: "CIN", velocity: "hot", faces: ["CIN-02-W", "CIN-05-W"] },
-  { run: "LOA", velocity: "flow", faces: ["LOA-03-W"] },
-  { run: "FLI", velocity: "flow", faces: ["FLI-04-W"] },
-  { run: "REE", velocity: "flow", faces: ["REE-02-E", "REE-04-W"] },
-  { run: "COB", velocity: "calm", faces: ["COB-01-E"] },
-] as const;
+const ZONES: readonly ZoneSpec[] = OPERATION_SPEC.zones.map((zone) => ({
+  run: zone.run,
+  velocity: zone.velocity as VelocityClassId,
+  faces: [...zone.sampleStands],
+}));
 
 export interface SkillRate {
   id: string;

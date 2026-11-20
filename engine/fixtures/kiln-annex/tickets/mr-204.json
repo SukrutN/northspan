@@ -1,0 +1,12 @@
+{
+  "id": "MR-204",
+  "house": "Merrow Chandlery",
+  "note": "Counter refill, ship Friday",
+  "locations": [
+    "CIN-06-W",
+    "LOA-01-E",
+    "FLI-06-E",
+    "REE-01-W",
+    "COB-06-W"
+  ]
+}

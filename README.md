@@ -22,6 +22,14 @@ npm run lint
 
 `npm test` checks the aisle distance, the route solver, and the standards table (every locked cell, the chain recombination, the band matrix, and ticket MR-204 priced two ways). There is no account, database, or external service.
 
+## The engine
+
+The planner lives in this repository at [`engine/`](engine/) — the .NET build behind the site, carried over from the old `northspan-engine` repository with its full history. The standards on the front page read the engine's published operation fixture (`engine/fixtures/kiln-annex/operation.json`) directly, and the same tables are locked by characterization tests on both sides, now in one CI run.
+
+```bash
+dotnet test engine/Northspan.slnx        # the engine's own tests
+```
+
 ## What you can do
 
 - Open **Floor** and add a house ticket, or mark faces on the plan.

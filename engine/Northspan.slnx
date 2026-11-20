@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Northspan.Api/Northspan.Api.csproj" />
+    <Project Path="src/Northspan.Application/Northspan.Application.csproj" />
+    <Project Path="src/Northspan.Cli/Northspan.Cli.csproj" />
+    <Project Path="src/Northspan.Domain/Northspan.Domain.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Northspan.Api.Tests/Northspan.Api.Tests.csproj" />
+    <Project Path="tests/Northspan.Domain.Tests/Northspan.Domain.Tests.csproj" />
+  </Folder>
+</Solution>

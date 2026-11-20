@@ -1,0 +1,74 @@
+{
+  "id": "dry-store",
+  "name": "Dry Store",
+  "widthM": 16,
+  "heightM": 12,
+  "crossAisles": [
+    {
+      "id": "apron",
+      "name": "Apron aisle",
+      "y": 2
+    },
+    {
+      "id": "rear",
+      "name": "Rear aisle",
+      "y": 10
+    }
+  ],
+  "gate": {
+    "id": "GATE",
+    "name": "Shed gate",
+    "x": 1,
+    "y": 2
+  },
+  "runs": [
+    {
+      "code": "ASH",
+      "name": "Ash",
+      "x": 4
+    },
+    {
+      "code": "BIR",
+      "name": "Birch",
+      "x": 9
+    }
+  ],
+  "slots": [
+    {
+      "code": "ASH-A",
+      "run": "ASH",
+      "stand": "ASH-A",
+      "alongM": 4,
+      "item": "South bin"
+    },
+    {
+      "code": "ASH-B",
+      "run": "ASH",
+      "stand": "ASH-B",
+      "alongM": 8,
+      "item": "North bin"
+    },
+    {
+      "code": "BIR-A",
+      "run": "BIR",
+      "stand": "BIR-A",
+      "alongM": 5,
+      "item": "Low bin"
+    },
+    {
+      "code": "BIR-B",
+      "run": "BIR",
+      "stand": "BIR-B",
+      "alongM": 9,
+      "item": "High bin"
+    }
+  ],
+  "landmarks": [
+    {
+      "id": "pack",
+      "name": "Pack",
+      "x": 14,
+      "y": 2
+    }
+  ]
+}

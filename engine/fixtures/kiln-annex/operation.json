@@ -1,0 +1,39 @@
+{
+  "id": "counter-refill",
+  "name": "Counter refill",
+  "note": "The worked operation behind the standards table: a counter-refill ticket touches every run, each line is two small units, and the hands do as much work as the cart.",
+  "walk": {
+    "speedMps": 1.15,
+    "mustReturn": true,
+    "dwellSecondsPerStop": 0
+  },
+  "shiftSeconds": 28800,
+  "cartStops": 10,
+  "unitsPerLine": 2,
+  "tasks": {
+    "grabPerLineSeconds": 3.0,
+    "grabPerUnitSeconds": 2.0,
+    "countAndGiveSeconds": 1.5,
+    "cartManeuverSeconds": 4.0,
+    "putAndVerifySeconds": 2.0,
+    "packSplitSeconds": 6.0
+  },
+  "velocityClasses": [
+    { "id": "hot", "name": "Hot", "linesPerShift": 1140 },
+    { "id": "flow", "name": "Flow", "linesPerShift": 960 },
+    { "id": "calm", "name": "Calm", "linesPerShift": 600 }
+  ],
+  "zones": [
+    { "run": "CIN", "velocity": "hot", "sampleStands": ["CIN-02-W", "CIN-05-W"] },
+    { "run": "LOA", "velocity": "flow", "sampleStands": ["LOA-03-W"] },
+    { "run": "FLI", "velocity": "flow", "sampleStands": ["FLI-04-W"] },
+    { "run": "REE", "velocity": "flow", "sampleStands": ["REE-02-E", "REE-04-W"] },
+    { "run": "COB", "velocity": "calm", "sampleStands": ["COB-01-E"] }
+  ],
+  "skills": [
+    { "id": "veteran", "name": "Veteran", "rateFactor": 1.0 },
+    { "id": "day", "name": "Day", "rateFactor": 0.85 },
+    { "id": "night", "name": "Night", "rateFactor": 0.7 }
+  ],
+  "sample": { "ticketId": "MR-204" }
+}
