@@ -166,15 +166,15 @@ export default function HomePage() {
           <div className="mt-10 grid gap-12 lg:grid-cols-12">
             <div className="space-y-4 text-base text-muted-foreground lg:col-span-7">
               <p>
-                The metres ask where the cart goes. The minutes ask what the picker does when the cart
-                is standing still. A counter-refill ticket pays seconds for every visit: hold the line,
+                The metres determine where the cart goes. The minutes determine what the picker does when the
+                cart is standing still. A counter-refill ticket pays seconds for every visit: hold the line,
                 3; take down a unit, 2; count and hand it over, 1.5; swing the cart into the bay, 4;
                 place and verify the line, 2; and the split at the pack bench, 6 once a ticket. Those
                 coefficients are fixture data, an operation file joined to the floor, the same way
                 the rules price the walk, not constants buried in the solver.
               </p>
               <p>
-                The tour is shared across tickets; the hands are not. Walking Cinder end to end costs{" "}
+                The tour is shared across the tickets it carries; the hands are charged in full. Walking Cinder end to end costs{" "}
                 {formatDuration(cinder.travelSeconds)}, but the cart carries {OPERATION.cartStops}{" "}
                 stops, and a ticket that touches two of them owes a fifth:{" "}
                 {cinderSharedWalk.toFixed(1)} seconds of walking. The hands owe all of theirs, grab,
