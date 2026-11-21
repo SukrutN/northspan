@@ -12,8 +12,8 @@
  * much of one picker's shift a zone's lines per shift take. The bands
  * scale the zone standard by a rate factor into a zone-times-band matrix.
  *
- * The operation — task mix, shift, cart stops, velocity classes, zones,
- * and skill bands — is read from the engine's published fixture
+ * The operation (task mix, shift, cart stops, velocity classes, zones,
+ * and skill bands) is read from the engine's published fixture
  * (engine/fixtures/kiln-annex/operation.json), not constants invented
  * for the page. The characterization tests here lock the same table the
  * engine's CLI prints.

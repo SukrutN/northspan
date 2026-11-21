@@ -7,7 +7,7 @@ export function SiteFooter() {
         <div>
           <p className="text-foreground">Northspan</p>
           <p className="mt-1 max-w-sm">
-            Pick paths for one floor. Kiln Annex is a worked model, not a live warehouse.
+            Pick paths for one floor. Kiln Annex is a worked model rather than a live warehouse.
           </p>
           <p className="mt-1 text-xs">Built by Sukrut Nadigotti</p>
         </div>

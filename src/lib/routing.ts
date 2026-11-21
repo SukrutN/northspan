@@ -1,7 +1,7 @@
 /**
  * Aisle walk for one picker on Kiln Annex.
  *
- * Distance is the cart's path, not a straight line through the racks.
+ * Distance follows the cart's path rather than a straight line through the racks.
  * On one run it is the gap along the aisle. Between runs the cart takes
  * the apron aisle or the rear aisle, whichever is shorter.
  *

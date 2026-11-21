@@ -255,7 +255,7 @@ export function Planner({ initialOrderId }: { initialOrderId: string | null }) {
 
           {lines.length === 0 ? (
             <p className="px-4 pb-5 text-sm text-muted-foreground">
-              Nothing on the cart. Add a ticket, or mark a face on the floor. The walk waits until there is a stop.
+              Nothing on the cart yet. Add a house ticket or mark a face on the floor, and the walk appears as soon as the list has a stop.
             </p>
           ) : (
             <ul className="divide-y divide-border border-t border-border">
