@@ -1,0 +1,6 @@
+# The image needs the engine's sources and this file; nothing else.
+*
+!engine
+!Dockerfile
+engine/**/bin
+engine/**/obj

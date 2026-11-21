@@ -7,9 +7,9 @@ namespace Northspan.Api;
 
 internal static class WalkEndpoints
 {
-    public static void MapWalks(this WebApplication app)
+    public static RouteHandlerBuilder MapWalks(this WebApplication app)
     {
-        app.MapPost("/v1/walks", Plan)
+        return app.MapPost("/v1/walks", Plan)
             .WithName("PlanWalk")
             .WithTags("Walks")
             .Produces<WalkResponse>(StatusCodes.Status200OK)
@@ -21,30 +21,36 @@ internal static class WalkEndpoints
         WalkRequest request,
         FixtureLibrary fixtures,
         PlanWalk planner,
+        OpsMetrics counters,
         ILogger<PlanWalk> logger)
     {
         if (request.FloorId is not null && request.Floor is not null)
         {
+            counters.WalkRefused();
             return Problem(StatusCodes.Status400BadRequest, "Name a fixture floor or send a floor, not both.");
         }
 
         if (request.FloorId is null && request.Floor is null)
         {
+            counters.WalkRefused();
             return Problem(StatusCodes.Status400BadRequest, "Name a fixture floor or send a floor.");
         }
 
         if (request.TicketId is not null && request.Locations is not null)
         {
+            counters.WalkRefused();
             return Problem(StatusCodes.Status400BadRequest, "Name a fixture ticket or send locations, not both.");
         }
 
         if (request.TicketId is null && request.Locations is null)
         {
+            counters.WalkRefused();
             return Problem(StatusCodes.Status400BadRequest, "Name a fixture ticket or send locations.");
         }
 
         if (request.TicketId is not null && request.Floor is not null)
         {
+            counters.WalkRefused();
             return Problem(
                 StatusCodes.Status400BadRequest,
                 "A fixture ticket belongs to a named floor. Send locations with an inline floor.");
@@ -68,6 +74,7 @@ internal static class WalkEndpoints
             planned.Walk.DistanceM,
             planned.Walk.Stops.Count);
 
+        counters.WalkPlanned();
         return Results.Ok(WalkResponse.From(planned));
     }
 

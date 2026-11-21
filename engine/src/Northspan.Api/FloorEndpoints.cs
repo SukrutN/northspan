@@ -4,7 +4,7 @@ namespace Northspan.Api;
 
 internal static class FloorEndpoints
 {
-    public static void MapFloors(this WebApplication app)
+    public static RouteGroupBuilder MapFloors(this WebApplication app)
     {
         var floors = app.MapGroup("/v1/floors").WithTags("Floors");
 
@@ -42,5 +42,7 @@ internal static class FloorEndpoints
         floors.MapGet("/{floorId}/tickets", (string floorId, FixtureLibrary library) =>
                 Results.Ok(new { tickets = library.Tickets(floorId) }))
             .WithName("ListTickets");
+
+        return floors;
     }
 }

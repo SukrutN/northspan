@@ -53,6 +53,29 @@
   .dot.up { background: #2e7d43; }
   .dot.down { background: #b3261e; }
 
+  /* The token slot appears only when the engine refuses without one. */
+  .token-slot { display: flex; align-items: center; gap: 8px; }
+  .token-slot input {
+    width: 160px;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--ink);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+  }
+  .token-slot button {
+    border: 1px solid var(--rust);
+    border-radius: 6px;
+    background: var(--rust);
+    color: var(--rust-ink);
+    font: inherit;
+    font-size: 12px;
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+
   main { max-width: 1180px; margin: 0 auto; padding: 32px 24px 64px; }
   .intro { max-width: 760px; margin: 0 0 28px; }
   .intro p { margin: 6px 0; font-size: 17px; }
@@ -167,6 +190,11 @@
   <div class="health">
     <span class="dot" id="healthDot"></span>
     <span id="healthText">checking the engine</span>
+  </div>
+  <div class="token-slot" id="tokenSlot" hidden>
+    <label for="token" style="font-size:12px;color:var(--muted)">Engine token</label>
+    <input type="password" id="token" autocomplete="off" placeholder="paste the token">
+    <button type="button" id="tokenUse">Unlock</button>
   </div>
 </header>
 
@@ -297,15 +325,22 @@ function problemLines(problem) {
 }
 
 function call(path, body) {
+  var headers = body ? { "content-type": "application/json" } : undefined;
+  var token = sessionStorage.getItem("northspan-token");
+  if (token) {
+    headers = headers || {};
+    headers.authorization = "Bearer " + token;
+  }
   return fetch(path, body ? {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: headers,
     body: JSON.stringify(body)
-  } : undefined).then(function (response) {
+  } : (headers ? { headers: headers } : undefined)).then(function (response) {
     setHealth(true, "engine reachable");
+    var retryAfter = response.headers.get("retry-after");
     return response.json().catch(function () { throw { problem: null, unparseable: true }; }).then(function (json) {
       if (!response.ok) {
-        throw { problem: json };
+        throw { problem: json, status: response.status, retryAfter: retryAfter };
       }
       return json;
     });
@@ -319,6 +354,18 @@ function call(path, body) {
 }
 
 function reportProblem(state) {
+  if (state && state.status === 401) {
+    document.getElementById("tokenSlot").hidden = false;
+    document.getElementById("token").focus();
+    showError("The engine asks for a token.",
+      ["Paste the engine's token in the header above, then run the request again."]);
+    return;
+  }
+  if (state && state.status === 429 && state.retryAfter) {
+    showError("Too many requests. Try again in " + state.retryAfter + " seconds.",
+      ["The engine is limiting this client's requests."]);
+    return;
+  }
   if (state && state.unparseable) {
     showError("The engine returned a response this page could not read.", []);
     return;
@@ -662,6 +709,21 @@ document.getElementById("clearBtn").addEventListener("click", function () {
   selected = [];
   renderCart();
   drawMap();
+});
+
+// --- The token slot: shown only when the engine asks for one. ---
+
+function useToken() {
+  var value = document.getElementById("token").value.trim();
+  if (!value) return;
+  sessionStorage.setItem("northspan-token", value);
+  document.getElementById("tokenSlot").hidden = true;
+  document.getElementById("token").value = "";
+  loadFloors();
+}
+document.getElementById("tokenUse").addEventListener("click", useToken);
+document.getElementById("token").addEventListener("keydown", function (event) {
+  if (event.key === "Enter") useToken();
 });
 document.getElementById("sweepBtn").addEventListener("click", function () {
   showSweep = !showSweep;

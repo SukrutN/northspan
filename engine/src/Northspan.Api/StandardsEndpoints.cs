@@ -7,9 +7,9 @@ namespace Northspan.Api;
 
 internal static class StandardsEndpoints
 {
-    public static void MapStandards(this WebApplication app)
+    public static RouteHandlerBuilder MapStandards(this WebApplication app)
     {
-        app.MapGet("/v1/floors/{floorId}/standards", Build)
+        return app.MapGet("/v1/floors/{floorId}/standards", Build)
             .WithName("Standards")
             .WithTags("Standards")
             .Produces<StandardsResponse>(StatusCodes.Status200OK)

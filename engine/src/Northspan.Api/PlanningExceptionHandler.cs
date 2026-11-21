@@ -6,7 +6,7 @@ using Northspan.Domain;
 
 namespace Northspan.Api;
 
-internal sealed class PlanningExceptionHandler : IExceptionHandler
+internal sealed class PlanningExceptionHandler(OpsMetrics counters) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
@@ -19,6 +19,7 @@ internal sealed class PlanningExceptionHandler : IExceptionHandler
             return false;
         }
 
+        counters.WalkRefused();
         problem.Instance = httpContext.Request.Path;
         problem.Extensions["traceId"] = httpContext.TraceIdentifier;
         await Results.Problem(
