@@ -229,6 +229,15 @@
         <textarea id="docPaste" spellcheck="false" placeholder='{"id": ..., "name": ..., "widthM": ..., "heightM": ..., "crossAisles": [...], "gate": {...}, "runs": [...], "slots": [...]}'></textarea>
         <button class="btn btn--ghost" id="docBtn" type="button">Draw the pasted floor</button>
       </details>
+
+      <details class="paste">
+        <summary>Import a location master (CSV)</summary>
+        <p class="hint" style="margin-top:12px">Paste a WMS-style export with columns code, run, stand, alongM, and optional sku and item. The importer splices the locations into the working floor above, refuses rows in its own words, and redraws the map.</p>
+        <label for="csvPaste">Location master (CSV)</label>
+        <textarea id="csvPaste" spellcheck="false" style="min-height:110px" placeholder="code,run,stand,alongM,sku,item&#10;CIN-01-W,CIN,CIN-01,6.15,KW-08,Cotton wick"></textarea>
+        <button class="btn btn--ghost" id="importBtn" type="button">Import the CSV</button>
+        <div id="importReport" hidden style="margin-top:12px"></div>
+      </details>
     </aside>
 
     <section id="results">
@@ -705,6 +714,83 @@ document.getElementById("floor").addEventListener("change", function (event) {
 document.getElementById("ticketBtn").addEventListener("click", walkTicket);
 document.getElementById("walkBtn").addEventListener("click", walkList);
 document.getElementById("docBtn").addEventListener("click", drawPastedFloor);
+
+// --- The location-master import: CSV in, spliced floor and report out. ---
+
+document.getElementById("importBtn").addEventListener("click", importLocations);
+
+function importLocations() {
+  var csv = document.getElementById("csvPaste").value.trim();
+  if (!csv) {
+    showError("The CSV area is empty.",
+      ["Paste the location master as CSV text, then import again."]);
+    return;
+  }
+  if (!floorSource) {
+    showError("No floor to import into.",
+      ["Choose a published floor or paste one, then import again."]);
+    return;
+  }
+  var body = { csv: csv };
+  if (floorSource.floorId) body.fixture = floorSource.floorId;
+  if (floorSource.floor) body.floor = floorSource.floor;
+  var button = document.getElementById("importBtn");
+  clearError();
+  busy(button, true, "Importing...");
+  call("/v1/import/floor", body).then(function (payload) {
+    try {
+      renderImport(payload);
+    } catch (renderFailure) {
+      showError("The engine returned an import this page could not display. The raw response is in the browser console.", []);
+      console.error(renderFailure, payload);
+    }
+  }).catch(function (state) {
+    reportProblem(state);
+  }).finally(function () {
+    busy(button, false, null);
+  });
+}
+
+function renderImport(payload) {
+  var report = payload.report || {};
+  var rows = (report.rejections || []).map(function (rejection) {
+    return "<tr><td class='num'>" + esc(rejection.line) + "</td>" +
+      "<td class='mono'>" + esc(rejection.code || "—") + "</td>" +
+      "<td>" + (rejection.reasons || []).map(esc).join(" ") + "</td></tr>";
+  }).join("");
+  var notes = (report.notes || []).map(function (note) {
+    return "<p class='hint' style='margin:6px 0 0'>" + esc(note) + "</p>";
+  }).join("");
+  document.getElementById("importReport").hidden = false;
+  document.getElementById("importReport").innerHTML =
+    "<p class='hint' style='margin:0'><strong>" + esc(report.rowsAccepted) + " of " +
+    esc(report.rowsRead) + " rows accepted" +
+    (report.rowsRejected ? ", " + esc(report.rowsRejected) + " refused" : "") +
+    ".</strong></p>" +
+    (rows ? "<div class='table-scroll' style='margin-top:8px'><table><thead><tr><th class='num'>line</th><th>location</th><th>reasons</th></tr></thead><tbody>" + rows + "</tbody></table></div>" : "") +
+    notes;
+
+  // The spliced floor becomes the working floor: the map redraws from it,
+  // the cart clears, and the document lands in the paste area for keeps.
+  if (payload.floor && (report.rowsAccepted || 0) > 0) {
+    floor = payload.floor;
+    floorSource = { floor: payload.floor };
+    selected = [];
+    walk = null;
+    showSweep = false;
+    document.getElementById("report").hidden = true;
+    document.getElementById("empty").hidden = false;
+    document.getElementById("docPaste").value = JSON.stringify(payload.floor, null, 2);
+    var ticketSelect = document.getElementById("ticket");
+    ticketSelect.textContent = "";
+    var none = document.createElement("option");
+    none.value = "";
+    none.textContent = "an imported floor has no tickets";
+    ticketSelect.appendChild(none);
+    drawMap();
+    renderCart();
+  }
+}
 document.getElementById("clearBtn").addEventListener("click", function () {
   selected = [];
   renderCart();

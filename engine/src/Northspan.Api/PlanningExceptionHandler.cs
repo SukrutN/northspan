@@ -70,6 +70,18 @@ internal sealed class PlanningExceptionHandler(OpsMetrics counters) : IException
             "Fixture not found",
             missing.Message,
             "/problems/not-found"),
+        // the import's own refusal, and then the base: an unmapped planning
+        // refusal is a refusal with words, not a server fault
+        ImportRefusalException import => Problem(
+            StatusCodes.Status400BadRequest,
+            "The import was refused",
+            import.Message,
+            "/problems/import-refused"),
+        PlanningException refused => Problem(
+            StatusCodes.Status400BadRequest,
+            "The request was refused",
+            refused.Message,
+            "/problems/refused"),
         _ => null,
     };
 

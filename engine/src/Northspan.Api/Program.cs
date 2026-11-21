@@ -123,6 +123,7 @@ app.MapGet("/metrics", () => Results.Text(metrics.Render(), "text/plain; version
 app.MapFloors().RequireRateLimiting("per-client");
 app.MapWalks().RequireRateLimiting("per-client");
 app.MapStandards().RequireRateLimiting("per-client");
+app.MapImports().RequireRateLimiting("per-client");
 app.MapWorkbench();
 
 app.Run();
