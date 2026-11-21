@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Northspan · walk workbench</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2028%2028'%3E%3Crect%20width='28'%20height='28'%20fill='%239d3d22'/%3E%3Ctext%20x='14'%20y='20'%20font-family='Segoe UI%2C%20sans-serif'%20font-size='15'%20font-weight='600'%20fill='%23fbf6ef'%20text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --paper: #f3f0e7;
+    --ink: #1c1f1a;
+    --card: #f7f4ec;
+    --muted: #5c645c;
+    --soft: #e8e2d6;
+    --border: #ddd6c8;
+    --rust: #9d3d22;
+    --rust-ink: #fbf6ef;
+    --bad: #8d2e2e;
+    --floor: #141815;
+    --floor-ink: #ebe6dc;
+    --route: #e39a62;
+    --sweep: #a8b9a4;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Schibsted Grotesk", "Avenir Next", "Segoe UI", sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+  header.top {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 24px;
+    background: rgba(243, 240, 231, 0.95);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(6px);
+  }
+  .brand h1 { margin: 0; font-size: 16px; font-weight: 600; letter-spacing: -0.02em; }
+  .brand .sub { display: block; font-size: 11px; color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase; }
+  .health { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: #9aa0a6; flex: none; }
+  .dot.up { background: #2e7d43; }
+  .dot.down { background: #b3261e; }
+
+  main { max-width: 1180px; margin: 0 auto; padding: 32px 24px 64px; }
+  .intro { max-width: 760px; margin: 0 0 28px; }
+  .intro p { margin: 6px 0; font-size: 17px; }
+  .intro .note { color: var(--muted); font-size: 14px; }
+
+  .layout { display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: 28px; align-items: start; }
+  @media (max-width: 920px) { .layout { grid-template-columns: 1fr; } }
+
+  aside.panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+    position: sticky;
+    top: 76px;
+  }
+  @media (max-width: 920px) { aside.panel { position: static; } }
+  aside.panel h2 { margin: 22px 0 4px; font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+  aside.panel h2:first-child { margin-top: 0; }
+  aside.panel .hint { margin: 0 0 12px; font-size: 13px; color: var(--muted); }
+
+  label { display: block; font-size: 12px; color: var(--muted); margin: 10px 0 4px; }
+  select, textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-size: 14px;
+  }
+  textarea { min-height: 110px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; }
+  select:focus, textarea:focus, button:focus-visible { outline: 2px solid var(--rust); outline-offset: 1px; }
+
+  .btn {
+    display: inline-block;
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px 14px;
+    border: 1px solid var(--rust);
+    border-radius: 6px;
+    background: var(--rust);
+    color: var(--rust-ink);
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+  }
+  .btn:hover:not(:disabled) { filter: brightness(1.08); }
+  .btn:disabled { opacity: 0.55; cursor: wait; }
+  .btn--ghost { background: transparent; color: var(--ink); border-color: var(--border); }
+  .btn--ghost:hover:not(:disabled) { background: var(--soft); filter: none; }
+
+  .cart { list-style: none; margin: 10px 0 0; padding: 0; font-size: 13px; }
+  .cart li { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 6px 8px; border-bottom: 1px solid var(--soft); }
+  .cart li:last-child { border-bottom: none; }
+  .cart button { border: none; background: none; color: var(--muted); cursor: pointer; font-size: 15px; padding: 0 2px; }
+  .cart button:hover { color: var(--bad); }
+  .cart .empty { color: var(--muted); border: none; }
+
+  details.paste { margin-top: 18px; border-top: 1px solid var(--soft); padding-top: 14px; }
+  details.paste summary { cursor: pointer; font-size: 13px; color: var(--muted); }
+  details.paste summary:hover { color: var(--ink); }
+
+  #results section { scroll-margin-top: 84px; }
+  .empty { border: 1px dashed var(--border); border-radius: 6px; padding: 40px 24px; color: var(--muted); font-size: 14px; text-align: center; }
+  .error { display: none; margin: 0 0 20px; padding: 14px 16px; border: 1px solid rgba(141, 46, 46, 0.4); border-left: 4px solid var(--bad); border-radius: 6px; background: rgba(141, 46, 46, 0.05); }
+  .error.show { display: block; }
+  .error .title { font-weight: 600; margin: 0 0 4px; }
+  .error ul { margin: 6px 0 0; padding-left: 20px; font-size: 13px; }
+
+  .map-wrap { border: 1px solid var(--border); border-radius: 6px; background: var(--floor); overflow: hidden; }
+  .map-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 8px 12px; background: rgba(235, 230, 220, 0.06); border-bottom: 1px solid rgba(235, 230, 220, 0.12); }
+  .map-bar .t { font-size: 12px; color: var(--floor-ink); letter-spacing: 0.08em; text-transform: uppercase; }
+  .map-bar .actions { display: flex; gap: 6px; }
+  .map-bar button { border: 1px solid rgba(235, 230, 220, 0.25); background: transparent; color: var(--floor-ink); font: inherit; font-size: 12px; padding: 3px 10px; border-radius: 4px; cursor: pointer; }
+  .map-bar button:hover:not(:disabled) { background: rgba(235, 230, 220, 0.1); }
+  .map-bar button:disabled { opacity: 0.4; cursor: default; }
+  .map-bar button.on { background: var(--route); border-color: var(--route); color: var(--floor); }
+  .map-scroll { overflow-x: auto; }
+  .map-scroll svg { display: block; width: 100%; height: auto; }
+  .map-scroll.wide svg { min-width: 900px; }
+  .map-cap { margin: 8px 2px 0; font-size: 12px; color: var(--muted); }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 20px 0; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 14px 16px; }
+  .card .k { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .card .v { margin-top: 4px; font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  .card .s { margin-top: 2px; font-size: 12px; color: var(--muted); }
+
+  .block { margin: 28px 0; }
+  .block h2 { margin: 0 0 4px; font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
+  .block .blurb { margin: 0 0 12px; font-size: 13px; color: var(--muted); max-width: 640px; }
+
+  .table-scroll { overflow-x: auto; border: 1px solid var(--border); border-radius: 6px; background: var(--card); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--soft); white-space: nowrap; }
+  th { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--border); }
+  tbody tr:last-child td { border-bottom: none; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  footer.site { border-top: 1px solid var(--border); padding: 20px 24px 32px; font-size: 12px; color: var(--muted); text-align: center; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <h1>Northspan</h1>
+    <span class="sub">walk workbench</span>
+  </div>
+  <div class="health">
+    <span class="dot" id="healthDot"></span>
+    <span id="healthText">checking the engine</span>
+  </div>
+</header>
+
+<main>
+  <div class="intro">
+    <p>Choose a floor, pick a house ticket or mark faces on the map, and read the walk the engine returns: the tour, the sweep it is measured against, and the seconds it takes.</p>
+    <p class="note">This workbench talks to the northspan planner over its published HTTP interface. Both floors are fictional worked examples; every figure comes from the engine.</p>
+  </div>
+
+  <div class="layout">
+    <aside class="panel">
+      <h2>The floor</h2>
+      <p class="hint">The engine publishes its floors with their tickets. Pick one and the map renders from the engine's own reading.</p>
+      <label for="floor">Published floor</label>
+      <select id="floor"></select>
+
+      <h2>House tickets</h2>
+      <p class="hint">A ticket is a worked cart. Walking one shows the engine's tour against its sweep.</p>
+      <label for="ticket">Ticket</label>
+      <select id="ticket"></select>
+      <button class="btn" id="ticketBtn" type="button">Walk the ticket</button>
+
+      <h2>Your own cart</h2>
+      <p class="hint">Click faces on the map to build a cart. The walk button sends the list to the engine.</p>
+      <ul class="cart" id="cart"></ul>
+      <button class="btn" id="walkBtn" type="button">Walk this list</button>
+      <button class="btn btn--ghost" id="clearBtn" type="button">Clear the cart</button>
+
+      <details class="paste">
+        <summary>Plan a pasted floor instead</summary>
+        <label for="docPaste" style="margin-top:12px">Floor document (JSON)</label>
+        <textarea id="docPaste" spellcheck="false" placeholder='{"id": ..., "name": ..., "widthM": ..., "heightM": ..., "crossAisles": [...], "gate": {...}, "runs": [...], "slots": [...]}'></textarea>
+        <button class="btn btn--ghost" id="docBtn" type="button">Draw the pasted floor</button>
+      </details>
+    </aside>
+
+    <section id="results">
+      <div class="error" id="error" role="alert"></div>
+      <div class="map-wrap" id="mapWrap">
+        <div class="map-bar">
+          <span class="t" id="mapTitle">No floor yet</span>
+          <span class="actions">
+            <button type="button" id="fitBtn" class="on">Fit</button>
+            <button type="button" id="largeBtn">Large</button>
+            <button type="button" id="sweepBtn" disabled>Show the sweep</button>
+          </span>
+        </div>
+        <div class="map-scroll" id="mapScroll"></div>
+      </div>
+      <p class="map-cap" id="mapCap">Choose a published floor to draw the building.</p>
+      <div class="empty" id="empty">
+        No walk yet. Pick a house ticket, or click faces on the map and walk your own list.
+        The distance, the sweep comparison, and the stop-by-stop tour will render here.
+      </div>
+      <div id="report" hidden>
+        <div class="cards" id="cards"></div>
+        <section class="block" id="stopsBlock">
+          <h2>The tour, stop by stop</h2>
+          <p class="blurb">Each row is one cart stop. The metres are from the previous stop along the route the engine took.</p>
+          <div class="table-scroll"><table id="stopsTable"></table></div>
+        </section>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="site">
+  <p>Kiln Annex and Dry Store are fictional worked floors. The planner and its figures are real. Built by Sukrut Nadigotti.</p>
+</footer>
+
+<script>
+"use strict";
+
+// Every dynamic string passes through esc() before it reaches innerHTML,
+// so nothing the engine or a pasted document returns can become markup.
+function esc(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function metres(value) {
+  return Number(value).toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + " m";
+}
+
+function setHealth(up, text) {
+  document.getElementById("healthDot").className = "dot " + (up ? "up" : "down");
+  document.getElementById("healthText").textContent = text;
+}
+
+function busy(button, on, label) {
+  button.disabled = on;
+  button.textContent = on ? label : button.dataset.label;
+}
+
+function clearError() {
+  var box = document.getElementById("error");
+  box.className = "error";
+  box.textContent = "";
+}
+
+function showError(title, lines) {
+  var box = document.getElementById("error");
+  var list = "";
+  if (lines && lines.length) {
+    list = "<ul>" + lines.map(function (l) { return "<li>" + esc(l) + "</li>"; }).join("") + "</ul>";
+  }
+  box.innerHTML = "<p class='title'>" + esc(title) + "</p>" + list;
+  box.className = "error show";
+}
+
+// The engine answers problems as JSON with a title, a detail, and sometimes
+// extra fields. Everything that is not a standard problem field is shown.
+function problemLines(problem) {
+  if (!problem || typeof problem !== "object") return [];
+  var standard = { title: 1, detail: 1, status: 1, type: 1, instance: 1, traceId: 1 };
+  var lines = [];
+  if (problem.detail) lines.push(String(problem.detail));
+  Object.keys(problem).forEach(function (key) {
+    if (!standard[key] && problem[key] !== null && typeof problem[key] !== "object") {
+      lines.push(key + ": " + String(problem[key]));
+    }
+  });
+  return lines;
+}
+
+function call(path, body) {
+  return fetch(path, body ? {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body)
+  } : undefined).then(function (response) {
+    setHealth(true, "engine reachable");
+    return response.json().catch(function () { throw { problem: null, unparseable: true }; }).then(function (json) {
+      if (!response.ok) {
+        throw { problem: json };
+      }
+      return json;
+    });
+  }).catch(function (error) {
+    if (error && (error.problem !== undefined || error.unparseable)) {
+      throw error;
+    }
+    setHealth(false, "engine unreachable");
+    throw { problem: null };
+  });
+}
+
+function reportProblem(state) {
+  if (state && state.unparseable) {
+    showError("The engine returned a response this page could not read.", []);
+    return;
+  }
+  if (state && state.problem) {
+    showError(state.problem.title || "The engine refused the request.", problemLines(state.problem));
+    return;
+  }
+  showError("The engine could not be reached. Check that the northspan process is running, then try again.", []);
+}
+
+// ── floor state ──────────────────────────────────────────────
+
+var floor = null;          // the working floor (fixture response or pasted document)
+var floorSource = null;    // {floorId} or {floor: document}
+var selected = [];         // location codes clicked on the map
+var walk = null;           // the last walk response
+var showSweep = false;
+
+function faces() {
+  if (!floor) return [];
+  return floor.locations || floor.slots || [];
+}
+
+function sideOf(code, runX) {
+  var suffix = String(code).split("-").pop().toUpperCase();
+  if (suffix === "W" || suffix === "A") return -1;
+  if (suffix === "E" || suffix === "B") return 1;
+  return 0;
+}
+
+function drawMap() {
+  if (!floor) return;
+  var W = Number(floor.widthM) || 10;
+  var H = Number(floor.heightM) || 10;
+  var y = function (metres) { return H - Number(metres); };
+  var parts = [];
+
+  (floor.crossAisles || []).forEach(function (aisle) {
+    parts.push("<line x1='0' y1='" + y(aisle.y) + "' x2='" + W + "' y2='" + y(aisle.y) +
+      "' stroke='rgba(235,230,220,0.25)' stroke-width='0.12' stroke-dasharray='0.7 0.5'/>");
+  });
+
+  (floor.runs || []).forEach(function (run) {
+    parts.push("<line x1='" + run.x + "' y1='0' x2='" + run.x + "' y2='" + H +
+      "' stroke='rgba(235,230,220,0.35)' stroke-width='0.14'/>");
+    parts.push("<text x='" + run.x + "' y='" + (H - 0.5) + "' fill='rgba(235,230,220,0.75)' font-size='1.05' text-anchor='middle' font-family='ui-monospace, monospace'>" + esc(run.code) + "</text>");
+  });
+
+  (floor.landmarks || []).forEach(function (mark) {
+    parts.push("<rect x='" + (mark.x - 0.55) + "' y='" + (y(mark.y) - 0.55) + "' width='1.1' height='1.1' fill='none' stroke='rgba(235,230,220,0.5)' stroke-width='0.1'/>");
+    parts.push("<text x='" + mark.x + "' y='" + (y(mark.y) + 1.6) + "' fill='rgba(235,230,220,0.6)' font-size='1' text-anchor='middle' font-family='ui-monospace, monospace'>" + esc(mark.name) + "</text>");
+  });
+
+  var gate = floor.gate;
+  if (gate) {
+    parts.push("<circle cx='" + gate.x + "' cy='" + y(gate.y) + "' r='0.5' fill='#ebe6dc'/>");
+    parts.push("<text x='" + gate.x + "' y='" + (y(gate.y) + 1.8) + "' fill='#ebe6dc' font-size='1' text-anchor='middle' font-family='ui-monospace, monospace'>GATE</text>");
+  }
+
+  faces().forEach(function (face) {
+    var runX = runXOf(face.run);
+    if (runX === null) return;
+    var x = runX + sideOf(face.code) * 0.75;
+    var top = y(face.alongM) - 0.35;
+    var isOn = selected.indexOf(face.code) !== -1;
+    var title = face.code + (face.item ? " · " + face.item : "");
+    parts.push("<rect data-code='" + esc(face.code) + "' x='" + (x - 0.35) + "' y='" + top + "' width='0.7' height='0.7' rx='0.12'" +
+      " fill='" + (isOn ? "#e39a62" : "rgba(235,230,220,0.16)") + "' stroke='rgba(235,230,220,0.35)' stroke-width='0.07' style='cursor:pointer'><title>" + esc(title) + "</title></rect>");
+  });
+
+  if (walk) {
+    if (showSweep && walk.sweepPolyline) {
+      parts.push(pathOf(walk.sweepPolyline, y, "#a8b9a4", "0.8 0.6"));
+    }
+    parts.push(pathOf(walk.polyline, y, "#e39a62"));
+    (walk.stops || []).forEach(function (stop) {
+      parts.push("<circle cx='" + stop.x + "' cy='" + y(stop.y) + "' r='0.55' fill='#e39a62' stroke='#141815' stroke-width='0.16'/>");
+      parts.push("<text x='" + stop.x + "' y='" + (y(stop.y) + 0.38) + "' fill='#141815' font-size='1' font-weight='700' text-anchor='middle' font-family='ui-monospace, monospace'>" + stop.order + "</text>");
+    });
+  }
+
+  document.getElementById("mapScroll").innerHTML =
+    "<svg viewBox='0 0 " + W + " " + H + "' role='img' aria-label='the floor, runs left to right, with the walk drawn on it'>" +
+    "<rect x='0' y='0' width='" + W + "' height='" + H + "' fill='#141815'/>" + parts.join("") + "</svg>";
+  document.getElementById("mapTitle").textContent = floor.name || floor.id || "Floor";
+  document.getElementById("mapCap").textContent = floor.note ||
+    "Faces with an orange fill are on your cart. Click a face to add or remove it. The orange line is the tour; the dashed line is the sweep.";
+  bindFaces();
+}
+
+function runXOf(code) {
+  var run = (floor.runs || []).find(function (r) { return String(r.code).toUpperCase() === String(code).toUpperCase(); });
+  return run ? Number(run.x) : null;
+}
+
+function pathOf(points, y, color, dash) {
+  if (!points || points.length < 2) return "";
+  var d = points.map(function (p, i) { return (i === 0 ? "M" : "L") + p.x + " " + y(p.y); }).join(" ");
+  return "<path d='" + d + "' fill='none' stroke='" + color + "' stroke-width='0.3' stroke-linejoin='round'" +
+    (dash ? " stroke-dasharray='" + dash + "'" : "") + "/>";
+}
+
+function bindFaces() {
+  document.querySelectorAll("#mapScroll rect[data-code]").forEach(function (rect) {
+    rect.addEventListener("click", function () {
+      var code = rect.getAttribute("data-code");
+      var at = selected.indexOf(code);
+      if (at === -1) { selected.push(code); } else { selected.splice(at, 1); }
+      renderCart();
+      drawMap();
+    });
+  });
+}
+
+function renderCart() {
+  var list = document.getElementById("cart");
+  if (!selected.length) {
+    list.innerHTML = "<li class='empty'>The cart is empty. Click faces on the map.</li>";
+    return;
+  }
+  list.innerHTML = selected.map(function (code) {
+    return "<li><span class='mono'>" + esc(code) + "</span><button type='button' data-remove='" + esc(code) + "' aria-label='remove " + esc(code) + "'>×</button></li>";
+  }).join("");
+  list.querySelectorAll("button[data-remove]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      selected = selected.filter(function (code) { return code !== button.getAttribute("data-remove"); });
+      renderCart();
+      drawMap();
+    });
+  });
+}
+
+// ── loading the floor and tickets ────────────────────────────
+
+function loadFloors() {
+  call("/v1/floors").then(function (list) {
+    var select = document.getElementById("floor");
+    select.textContent = "";
+    (list.floors || []).forEach(function (id) {
+      var option = document.createElement("option");
+      option.value = id;
+      option.textContent = id;
+      select.appendChild(option);
+    });
+    if ((list.floors || []).length) loadFloor(list.floors[0]);
+  }).catch(function (state) { reportProblem(state); });
+}
+
+function loadFloor(id) {
+  clearError();
+  // The ticket list arrives after the floor; clear the stale options first so
+  // a quick ticket walk cannot fire against the previous floor's list.
+  var ticketSelect = document.getElementById("ticket");
+  ticketSelect.textContent = "";
+  var loading = document.createElement("option");
+  loading.value = "";
+  loading.textContent = "loading the tickets";
+  ticketSelect.appendChild(loading);
+  call("/v1/floors/" + encodeURIComponent(id)).then(function (loaded) {
+    floor = loaded;
+    floorSource = { floorId: id };
+    selected = [];
+    walk = null;
+    showSweep = false;
+    document.getElementById("report").hidden = true;
+    document.getElementById("empty").hidden = false;
+    drawMap();
+    renderCart();
+    loadTickets(id);
+  }).catch(function (state) { reportProblem(state); });
+}
+
+function loadTickets(id) {
+  call("/v1/floors/" + encodeURIComponent(id) + "/tickets").then(function (list) {
+    var select = document.getElementById("ticket");
+    select.textContent = "";
+    var tickets = list.tickets || [];
+    if (!tickets.length) {
+      var none = document.createElement("option");
+      none.value = "";
+      none.textContent = "this floor ships no tickets";
+      select.appendChild(none);
+      return;
+    }
+    tickets.forEach(function (ticket) {
+      var option = document.createElement("option");
+      option.value = ticket.id;
+      option.textContent = ticket.id + (ticket.house ? " · " + ticket.house : "") +
+        (ticket.stopCount ? " · " + ticket.stopCount + " stop" + (ticket.stopCount === 1 ? "" : "s") : "");
+      select.appendChild(option);
+    });
+  }).catch(function (state) { reportProblem(state); });
+}
+
+// ── walking ──────────────────────────────────────────────────
+
+function walkThe(body, button, busyLabel) {
+  clearError();
+  busy(button, true, busyLabel);
+  call("/v1/walks", body).then(function (response) {
+    try {
+      renderWalk(response);
+    } catch (renderFailure) {
+      showError("The engine returned a walk this page could not display. The raw response is in the browser console.", []);
+      console.error(renderFailure, response);
+    }
+  }).catch(function (state) {
+    reportProblem(state);
+  }).finally(function () {
+    busy(button, false, null);
+  });
+}
+
+function walkTicket() {
+  var id = document.getElementById("ticket").value;
+  if (!id) {
+    showError("This floor ships no tickets. Mark faces on the map and walk your own list instead.", []);
+    return;
+  }
+  walkThe({ floorId: floorSource.floorId, ticketId: id }, document.getElementById("ticketBtn"), "Walking the ticket...");
+}
+
+function walkList() {
+  if (!selected.length) {
+    showError("The cart is empty. Click faces on the map, or walk a house ticket instead.", []);
+    return;
+  }
+  var body = { locations: selected.slice() };
+  if (floorSource.floorId) body.floorId = floorSource.floorId;
+  if (floorSource.floor) body.floor = floorSource.floor;
+  walkThe(body, document.getElementById("walkBtn"), "Walking the floor...");
+}
+
+function drawPastedFloor() {
+  var text = document.getElementById("docPaste").value.trim();
+  if (!text) {
+    showError("The paste area is empty. Paste a floor document as JSON, or choose a published floor instead.", []);
+    return;
+  }
+  var document_;
+  try {
+    document_ = JSON.parse(text);
+  } catch (parseFailure) {
+    showError("The pasted document is not valid JSON. " + parseFailure.message, []);
+    return;
+  }
+  if (typeof document_ !== "object" || document_ === null || Array.isArray(document_) || !document_.runs) {
+    showError("The pasted document must be a floor object with runs, cross-aisles, a gate, and slots.", []);
+    return;
+  }
+  clearError();
+  floor = document_;
+  floorSource = { floor: document_ };
+  selected = [];
+  walk = null;
+  showSweep = false;
+  document.getElementById("report").hidden = true;
+  document.getElementById("empty").hidden = false;
+  var ticketSelect = document.getElementById("ticket");
+  ticketSelect.textContent = "";
+  var none = document.createElement("option");
+  none.value = "";
+  none.textContent = "a pasted floor has no tickets";
+  ticketSelect.appendChild(none);
+  drawMap();
+  renderCart();
+}
+
+function renderWalk(response) {
+  if (!response || typeof response !== "object" || !Array.isArray(response.stops)) {
+    throw new Error("unexpected walk shape");
+  }
+  walk = response;
+  showSweep = false;
+  document.getElementById("empty").hidden = true;
+  document.getElementById("report").hidden = false;
+
+  var sweep = response.sweep || {};
+  document.getElementById("cards").innerHTML =
+    card("Distance", metres(response.distanceM), "gate to gate") +
+    card("Walk time", esc(response.duration || "—"), Math.round(Number(response.durationSeconds) || 0) + " seconds") +
+    card("Cart stops", dash(response.stopCount), "stands the picker works") +
+    card("Versus sweep", sweep.shorterPercent !== undefined ? sweep.shorterPercent + "%" : "—",
+      "the sweep is " + (sweep.distanceM !== undefined ? metres(sweep.distanceM) : "—") +
+      (sweep.savedM !== undefined ? ", the tour saves " + metres(sweep.savedM) : ""));
+
+  var rows = (response.stops || []).map(function (stop) {
+    return "<tr><td class='num'>" + dash(stop.order) + "</td>" +
+      "<td class='mono'>" + (stop.locations || []).map(esc).join(", ") + "</td>" +
+      "<td>" + esc(stop.run) + "</td>" +
+      "<td class='num'>" + (stop.metresFromPrevious !== undefined ? metres(stop.metresFromPrevious) : "—") + "</td>" +
+      "<td>" + esc(stop.via || "—") + "</td></tr>";
+  }).join("");
+  document.getElementById("stopsTable").innerHTML =
+    "<thead><tr><th class='num'>stop</th><th>faces</th><th>run</th><th class='num'>from previous</th><th>via</th></tr></thead><tbody>" + rows + "</tbody>";
+
+  updateSweepButton();
+  drawMap();
+}
+
+function updateSweepButton() {
+  var button = document.getElementById("sweepBtn");
+  if (!walk || !walk.sweep) {
+    button.disabled = true;
+    button.classList.remove("on");
+    button.textContent = "Show the sweep";
+    return;
+  }
+  var same = !walk.sweep.savedM;
+  button.disabled = same;
+  button.classList.toggle("on", showSweep && !same);
+  button.textContent = showSweep ? "Hide the sweep" : "Show the sweep";
+  if (same) {
+    document.getElementById("mapCap").textContent =
+      "This tour matches the sweep exactly, so there is no second line to draw.";
+  }
+}
+
+function card(key, value, sub) {
+  return "<div class='card'><div class='k'>" + esc(key) + "</div><div class='v'>" + value + "</div><div class='s'>" + esc(sub) + "</div></div>";
+}
+
+function dash(value) {
+  return value === null || value === undefined ? "—" : esc(value);
+}
+
+// ── wiring ───────────────────────────────────────────────────
+
+document.getElementById("ticketBtn").dataset.label = "Walk the ticket";
+document.getElementById("walkBtn").dataset.label = "Walk this list";
+document.getElementById("clearBtn").dataset.label = "Clear the cart";
+
+document.getElementById("floor").addEventListener("change", function (event) {
+  if (event.target.value) loadFloor(event.target.value);
+});
+document.getElementById("ticketBtn").addEventListener("click", walkTicket);
+document.getElementById("walkBtn").addEventListener("click", walkList);
+document.getElementById("docBtn").addEventListener("click", drawPastedFloor);
+document.getElementById("clearBtn").addEventListener("click", function () {
+  selected = [];
+  renderCart();
+  drawMap();
+});
+document.getElementById("sweepBtn").addEventListener("click", function () {
+  showSweep = !showSweep;
+  updateSweepButton();
+  drawMap();
+});
+document.getElementById("fitBtn").addEventListener("click", function () {
+  document.getElementById("mapScroll").classList.remove("wide");
+  document.getElementById("fitBtn").classList.add("on");
+  document.getElementById("largeBtn").classList.remove("on");
+});
+document.getElementById("largeBtn").addEventListener("click", function () {
+  document.getElementById("mapScroll").classList.add("wide");
+  document.getElementById("largeBtn").classList.add("on");
+  document.getElementById("fitBtn").classList.remove("on");
+});
+
+renderCart();
+fetch("/health").then(function (response) {
+  setHealth(response.ok, response.ok ? "engine reachable" : "engine unreachable");
+}).catch(function () {
+  setHealth(false, "engine unreachable");
+});
+loadFloors();
+</script>
+</body>
+</html>

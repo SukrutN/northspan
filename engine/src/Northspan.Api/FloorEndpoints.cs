@@ -23,6 +23,17 @@ internal static class FloorEndpoints
                     runs = floor.Runs.Select(run => new { code = run.Code, name = run.Name, x = run.X }),
                     crossAisles = floor.CrossAisles.Select(aisle => new { id = aisle.Id, name = aisle.Name, y = aisle.Y }),
                     gate = new { id = floor.Gate.Id, name = floor.Gate.Name, x = floor.Gate.X, y = floor.Gate.Y },
+                    landmarks = floor.Landmarks.Select(landmark =>
+                        new { id = landmark.Id, name = landmark.Name, x = landmark.X, y = landmark.Y }),
+                    locations = floor.Slots.Select(slot => new
+                    {
+                        code = slot.Code,
+                        run = slot.Run,
+                        stand = slot.Stand,
+                        alongM = slot.AlongM,
+                        sku = slot.Sku,
+                        item = slot.Item
+                    }),
                     slotCount = floor.Slots.Count,
                 });
             })

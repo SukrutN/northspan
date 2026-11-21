@@ -31,6 +31,7 @@ app.MapGet("/health", () => Results.Ok(new { status = "healthy" }))
 app.MapFloors();
 app.MapWalks();
 app.MapStandards();
+app.MapWorkbench();
 
 app.Run();
 
