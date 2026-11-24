@@ -13,6 +13,9 @@ import { OPERATION, sampleMix, ZONE_STANDARDS } from "@/lib/standards";
 import { BAY_COUNT, FLOOR, RUNS } from "@/lib/warehouse";
 import { cn } from "cn";
 
+/** GitHub Pages serves the site under /northspan; committed links carry it. */
+const SAMPLE_BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 const demoOrder = ORDERS[0];
 const demo = planWalk(demoOrder.lines.map((line) => line.faceId));
 const savedPct = Math.round((demo.savedM / demo.sweepDistanceM) * 100);
@@ -458,7 +461,7 @@ export default function HomePage() {
             {SOURCES.map((source) => (
               <a
                 key={source.title}
-                href={source.href}
+                href={source.local ? `${SAMPLE_BASE}${source.href}` : source.href}
                 target="_blank"
                 rel="noreferrer"
                 className="group flex flex-col rounded-lg bg-floor p-6 transition-colors hover:bg-[#210a07]"
